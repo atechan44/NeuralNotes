@@ -7,6 +7,8 @@ Notlarınızdan öğrenen, kişiselleştirilmiş öneriler sunan ve beyin fırt�
 ### Genel Bakış
 Notlarınızdan yapay zekaya size özel sınav hazırlaması, yeni yaratıcı fikirler sunması, öğrenme içeriklerini özetlemesi, bilgi boşluklarını tespit etmesi ve kişisel gelişim yolculuğunuzu takip etmesi için AI destekli bir platform.
 
+Sadece notları analiz eden bir yapay zekâ değil! Favori yapay zeka modelinizin hayallerinizi, düşünce tarzınızı ve misyonunuzu anlamasını sağlayarak sizi daha derinlemesine tanıyan bir yol arkadaşı. Böylece sadece notlar veya fikir alışverişi için değil, samimi sohbetler için de kullanabilirsiniz.
+
 ### Geliştirme Aşamaları
 **Aşama 1:** Kişiselleştirilmiş yanıtlar için özenle hazırlanmış komutlar kullanarak harici yapay zekâ API'leriyle entegrasyon
 
