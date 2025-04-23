@@ -47,7 +47,7 @@
 ---
 
 ### 🔗 Embed Özelliği
-- YouTube videoları, tweetler, PDF’ler gibi içerikleri not içine gömebilme
+- YouTube videoları, tweetler, PDF'ler gibi içerikleri not içine gömebilme
 
 ---
 
