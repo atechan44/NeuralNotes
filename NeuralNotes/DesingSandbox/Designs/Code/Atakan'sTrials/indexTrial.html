@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuralNotes</title>
+    <link rel="stylesheet" href="CssWorkZone.css">
+</head>
+
+<body>
+    <!-- Ana kapsayıcı -->
+    <div class="app-container">
+        <!-- Sol Sidebar: Kullanıcı özellikleri -->
+        <aside class="sidebar">
+            <header class="sidebar-header">
+                <h2></h2>
+                <button class="menu-toggle">
+                    <img src="../images/gemini-logo.png" alt="Menu Icon" width="24" height="24">
+                </button>
+                <button class="new-note-btn">+ Yeni Not</button>
+            </header>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="#" class="active">Toplantı Notları</a></li>
+                    <li><a href="#">Alışveriş Listesi</a></li>
+                    <li><a href="#">Fikirler</a></li>
+                    <li><a href="#">Matematik Dersleri</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Orta Alan: Yapay zeka asistanı arayüzü -->
+        <main class="main-content">
+            <!-- Üst Menü -->
+            <div class="top-menu">
+                <button class="menu-toggle">
+                    <svg class="gemini-logo" viewBox="0 0 100 100">
+                        <path d="M50 0 C77.614 0 100 22.386 100 50 C100 77.614 77.614 100 50 100 C22.386 100 0 77.614 0 50 C0 22.386 22.386 0 50 0" fill="#8e44ad"/>
+                        <path d="M50 15 L85 50 L50 85 L15 50 Z" fill="white"/>
+                    </svg>
+                </button>
+            </div>
+            <header class="main-header">
+                <h1>NeuralNotes</h1>
+                <p>Merhaba! Notlarınızı buradan yönetebilir ve düzenleyebilirsiniz.</p>
+            </header>
+            <section class="chat-area">
+                <!-- Sohbet mesajları -->
+                <article class="message message--bot">
+                    <p>Bir not yazın...</p>
+                </article>
+                <article class="message message--user">
+                    <p>Kaydet</p>
+                </article>
+                <!-- Daha fazla mesaj eklenebilir -->
+            </section>
+            <!-- Mesaj yazma alanı -->
+            <form class="chat-input">
+                <input type="text" placeholder="Bir not yazın..." aria-label="Not yaz">
+                <button type="submit">Gönder</button>
+            </form>
+        </main>
+
+        <!-- Sağ Kısım: Yapay zeka paneli (tuşla açılıp kapanacak) -->
+        <aside class="ai-panel" aria-hidden="true">
+            <header class="ai-panel-header">
+                <h2>Yapay Zeka</h2>
+                <button class="close-panel-btn" aria-label="Paneli kapat">X</button>
+            </header>
+            <section class="ai-chat">
+                <article class="message message--bot">
+                    <p>Tahmin yürütme, verilere dayanarak geleceği olaylar veya sonuçlar hakkında çıkarımlar yapma sürecidir.</p>
+                </article>
+                <article class="message message--user">
+                    <p>Raporun ana noktaları kısaltarak ve sadeleştirerek özetliyorum:</p>
+                </article>
+                <article class="message message--user">
+                    <p>Tahmin yürütme ne anlama gelir?</p>
+                </article>
+            </section>
+            <form class="ai-chat-input">
+                <input type="text" placeholder="Yapay zekaya sor..." aria-label="Yapay zekaya soru sor">
+                <button type="submit">Gönder</button>
+            </form>
+        </aside>
+
+        <!-- Alt Kısım: Hesap bölümü -->
+        <footer class="account-section">
+            <p>Hesap: Kullanıcı Adı</p>
+            <button class="logout-btn">Çıkış Yap</button>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
