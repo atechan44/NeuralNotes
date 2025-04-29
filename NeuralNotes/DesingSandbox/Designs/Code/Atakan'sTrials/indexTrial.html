@@ -5,20 +5,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NeuralNotes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="CssWorkZone.css">
 </head>
 
 <body>
+    <!-- Sicim teorisi canvas animasyonu -->
+    <canvas id="stringTheoryAnimation"></canvas>
+
+    <!-- Sidebar açma butonu (sol üstte, sidebar kapalıyken görünür) -->
+    <button id="openSidebarBtn" style="position: fixed; top: 24px; left: 24px; z-index: 1001; font-size: 2rem; background: none; border: none; cursor: pointer; display: none;">⯌</button>
     <!-- Ana kapsayıcı -->
     <div class="app-container">
         <!-- Sol Sidebar: Kullanıcı özellikleri -->
         <aside class="sidebar">
             <header class="sidebar-header">
-                <h2></h2>
-                <button class="menu-toggle">
-                    <img src="../images/gemini-logo.png" alt="Menu Icon" width="24" height="24">
-                </button>
                 <button class="new-note-btn">+ Yeni Not</button>
+                <h2></h2>
+                <button class="close-sidebar-btn">⬅</button>
             </header>
             <nav class="sidebar-nav">
                 <ul>
@@ -32,34 +38,17 @@
 
         <!-- Orta Alan: Yapay zeka asistanı arayüzü -->
         <main class="main-content">
-            <!-- Üst Menü -->
-            <div class="top-menu">
-                <button class="menu-toggle">
-                    <svg class="gemini-logo" viewBox="0 0 100 100">
-                        <path d="M50 0 C77.614 0 100 22.386 100 50 C100 77.614 77.614 100 50 100 C22.386 100 0 77.614 0 50 C0 22.386 22.386 0 50 0" fill="#8e44ad"/>
-                        <path d="M50 15 L85 50 L50 85 L15 50 Z" fill="white"/>
-                    </svg>
-                </button>
+            <div class="center-box">
+                <header class="main-header">
+                    <h1>NeuralNotes</h1>
+                    <p>Merhaba! Notlarınızı buradan yönetebilir ve düzenleyebilirsiniz.</p>
+                </header>
+                <!-- Mesaj yazma alanı -->
+                <form class="chat-input">
+                    <input type="text" placeholder="Bir not yazın..." aria-label="Not yaz">
+                    <button type="submit">➣</button>
+                </form>
             </div>
-            <header class="main-header">
-                <h1>NeuralNotes</h1>
-                <p>Merhaba! Notlarınızı buradan yönetebilir ve düzenleyebilirsiniz.</p>
-            </header>
-            <section class="chat-area">
-                <!-- Sohbet mesajları -->
-                <article class="message message--bot">
-                    <p>Bir not yazın...</p>
-                </article>
-                <article class="message message--user">
-                    <p>Kaydet</p>
-                </article>
-                <!-- Daha fazla mesaj eklenebilir -->
-            </section>
-            <!-- Mesaj yazma alanı -->
-            <form class="chat-input">
-                <input type="text" placeholder="Bir not yazın..." aria-label="Not yaz">
-                <button type="submit">Gönder</button>
-            </form>
         </main>
 
         <!-- Sağ Kısım: Yapay zeka paneli (tuşla açılıp kapanacak) -->
@@ -93,6 +82,8 @@
     </div>
 
     <script src="script.js"></script>
+    <script src="animation.js"></script>
+    <script src="stringTheory.js"></script>
 </body>
 
 </html>
