@@ -1,0 +1,446 @@
+/* Genel sıfırlama ve temel stiller */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', Arial, sans-serif;
+    background-color: #212529;
+    /* Koyu Gri Arka Plan */
+    background-image: linear-gradient(to bottom, #1a1f25, #212529);
+    color: #FFFFFF;
+    /* Varsayılan Beyaz Metin */
+    line-height: 1.6;
+    position: relative;
+    overflow-x: hidden;
+}
+
+
+/* Z-index yönetimi için */
+
+#stringTheoryAnimation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: calc(100vh - 60px);
+    /* Footer yüksekliğini çıkar */
+    z-index: 1;
+    /* Arka planda */
+    pointer-events: none;
+    /* Canvas'ın fare olaylarını yakalamasını engelle */
+    opacity: 1;
+    /* Tam görünürlük */
+    filter: blur(1.5px);
+    /* Buzlu cam efekti */
+}
+
+a {
+    color: #00D4FF;
+    /* Elektrik Mavisi Linkler */
+    text-decoration: none;
+}
+
+
+/* Kapsayıcı: Flex ile düzen oluştur */
+
+.app-container {
+    position: relative;
+    z-index: 5;
+    /* İçerik ön planda */
+    display: flex;
+    min-height: 100vh;
+    background-color: transparent !important;
+    /* Tamamen şeffaf */
+}
+
+
+/* Sol Sidebar */
+
+.sidebar {
+    width: 250px;
+    background-color: rgba(40, 44, 52, 0.4);
+    /* Daha saydam */
+    backdrop-filter: blur(10px);
+    /* Daha güçlü blur efekti */
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    /* Soluk Mavi-Gri Çizgi */
+    padding: 20px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    z-index: 10;
+}
+
+.sidebar.collapsed {
+    transform: translateX(-100%) !important;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.new-note-btn {
+    background-color: #00D4FF;
+    /* Elektrik Mavisi */
+    color: #FFFFFF;
+    /* Beyaz Metin */
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.9rem;
+    box-shadow: 0 2px 5px rgba(0, 212, 255, 0.2);
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.new-note-btn:hover {
+    background-color: #33E0FF;
+}
+
+.new-note-btn:active {
+    transform: scale(0.98);
+}
+
+.sidebar-nav {
+    flex-grow: 1;
+}
+
+.sidebar-nav ul {
+    list-style: none;
+}
+
+.sidebar-nav li {
+    margin-bottom: 8px;
+}
+
+.sidebar-nav a {
+    color: #CED4DA;
+    /* Açık Gri Metin */
+    display: block;
+    padding: 10px 12px;
+    border-radius: 6px;
+    transition: background-color 0.2s, color 0.2s;
+    position: relative;
+}
+
+.sidebar-nav a:hover {
+    background-color: rgba(73, 80, 87, 0.5);
+    /* Soluk Mavi-Gri Hover */
+    color: #FFFFFF;
+}
+
+.sidebar-nav a.active {
+    color: #FFFFFF;
+    font-weight: 500;
+}
+
+.sidebar-nav a.active::after {
+    content: '';
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 4px;
+    height: 2px;
+    background-color: #FFD60A;
+    /* Limon Sarısı Alt Çizgi */
+    border-radius: 1px;
+}
+
+.close-sidebar-btn {
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    color: #CED4DA;
+    /* Açık Gri */
+    transition: color 0.2s;
+}
+
+.close-sidebar-btn:hover {
+    color: #FFFFFF;
+}
+
+
+/* Sidebar Açma Butonu (Sol Üst) */
+
+#openSidebarBtn {
+    color: #CED4DA;
+    transition: color 0.2s;
+    z-index: 100;
+}
+
+#openSidebarBtn:hover {
+    color: #FFFFFF;
+}
+
+
+/* Orta Alan: Ana İçerik - DÜZELTME */
+
+.main-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent !important;
+    /* Tamamen şeffaf! */
+    min-height: 100vh;
+    box-sizing: border-box;
+    padding: 0;
+    /* Padding kaldırıldı */
+    flex: 1;
+    padding: 20px;
+    position: relative;
+    transition: margin 0.3s ease;
+    z-index: 5;
+    background-color: transparent;
+}
+
+
+/* Center Box - DÜZELTME */
+
+.center-box {
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: transparent;
+    border-radius: 10px;
+    box-shadow: none;
+    padding: 20px;
+    position: relative;
+    z-index: 5;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+/* Sidebar açıkken center-box normal konumda */
+
+.sidebar:not(.collapsed)~.main-content .center-box {
+    transform: translateX(0);
+}
+
+
+/* Sidebar kapalıyken center-box sidebar genişliğinin yarısı kadar sola kayar */
+
+.sidebar.collapsed~.main-content .center-box {
+    transform: translateX(-125px);
+}
+
+.main-header {
+    text-align: center;
+    padding: 20px 0;
+    background-color: transparent;
+    z-index: 5;
+    position: relative;
+}
+
+.main-header h1 {
+    font-size: 2.5rem;
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    margin: 0;
+}
+
+.main-header p {
+    color: #CED4DA;
+    font-size: 1rem;
+    text-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+    /* Okunaklılık için gölge ekle */
+}
+
+
+/* Chat Input Alanı - Yarı Saydam Yap */
+
+.chat-input {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    max-width: 700px;
+    min-width: 300px;
+    height: 56px;
+    margin: 0 auto;
+    background: rgba(52, 58, 64, 0.5) !important;
+    /* Daha saydam */
+    backdrop-filter: blur(10px) !important;
+    /* Daha fazla blur */
+    border-radius: 28px;
+    align-items: center;
+    padding: 0 8px 0 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 10px 0;
+    border: none;
+    background: transparent;
+    color: #CED4DA;
+    /* Açık Gri Metin */
+    font-size: 1rem;
+    height: 100%;
+    outline: none;
+}
+
+.chat-input input::placeholder {
+    color: #6C757D;
+    /* Soluk Placeholder */
+    opacity: 1;
+}
+
+.chat-input button {
+    background-color: #00D4FF;
+    /* Elektrik Mavisi */
+    color: #212529;
+    /* Koyu Arka Plan Rengi */
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    height: 40px;
+    /* Boyutları güncelledim */
+    width: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s, transform 0.1s;
+    margin-left: 8px;
+}
+
+.chat-input button:hover {
+    background-color: #33E0FF;
+}
+
+.chat-input button:active {
+    transform: scale(0.95);
+}
+
+
+/* Sağ Panel: Yapay Zeka (Gizli) */
+
+.ai-panel {
+    display: none;
+    /* Bu panel kullanılmadığı için gizli */
+}
+
+
+/* Alt Kısım: Hesap */
+
+.account-section {
+    background-color: #1a1d20;
+    /* Daha koyu arka plan */
+    border-top: 1px solid #495057;
+    /* Soluk Mavi-Gri Çizgi */
+    padding: 15px 20px;
+    text-align: right;
+    /* Sağa yasladım */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    /* Sabit yükseklik */
+    color: #CED4DA;
+    /* Açık Gri Metin */
+    font-size: 0.9rem;
+    display: flex;
+    justify-content: flex-end;
+    /* İçeriği sağa yasla */
+    align-items: center;
+    gap: 15px;
+    z-index: 20;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+    /* Üstten hafif gölge */
+}
+
+.logout-btn {
+    background-color: #FF6F61;
+    /* Mercan Kırmızısı */
+    color: #FFFFFF;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.9rem;
+    box-shadow: 0 2px 5px rgba(255, 111, 97, 0.2);
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.logout-btn:hover {
+    background-color: #FF8B80;
+}
+
+.logout-btn:active {
+    transform: scale(0.98);
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        width: 200px;
+    }
+    .main-content {
+        padding: 20px;
+    }
+    .center-box {
+        max-width: 100%;
+        padding: 10px;
+    }
+    .chat-input {
+        width: 90vw;
+        height: 50px;
+    }
+    .chat-input button {
+        height: 36px;
+        width: 36px;
+        min-width: 36px;
+        min-height: 36px;
+        font-size: 1rem;
+    }
+    .account-section {
+        justify-content: center;
+        text-align: center;
+    }
+}
+
+
+/* Eski/Kullanılmayan Stiller (Gerekirse temizlenebilir) */
+
+.chat-area,
+.message--bot p,
+.ai-panel,
+.ai-panel-header,
+.close-panel-btn,
+.ai-chat {
+    /* display: none; */
+    /* Bu alanlar HTML'den kaldırıldığı için stil gereksiz */
+}
+
+
+/* Sidebar Açık/Kapalı Ortalaması için Eski Kurallar (SİLİNDİ) */
+
+
+/* Bu kuralları tamamen kaldırıyorum, animasyonu görmek için */
+
+#stringTheoryCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
