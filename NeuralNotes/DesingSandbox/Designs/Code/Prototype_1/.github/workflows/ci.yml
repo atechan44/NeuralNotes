@@ -1,0 +1,37 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: [ main ] # Ana branch'e push yapıldığında tetikle
+  pull_request:
+    branches: [ main ] # Ana branch'e pull request açıldığında/güncellendiğinde tetikle
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # İşin çalışacağı işletim sistemi
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x] # Farklı Node.js sürümlerinde test et
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4 # Kodu repondan çalışma alanına kopyala
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4 # Belirtilen Node.js sürümünü kur
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm' # npm önbelleğini kullan (daha hızlı yükleme için)
+
+    - name: Install dependencies
+      run: npm ci # package-lock.json kullanarak tam bağımlılıkları yükle
+
+    - name: Run linters
+      run: npm run lint # ESLint kontrolünü çalıştır
+
+    - name: Run tests
+      run: npm run test -- --run # Vitest testlerini çalıştır (tek seferlik çalıştırma modu)
+
+    - name: Build project
+      run: npm run build # Projeyi derle 
