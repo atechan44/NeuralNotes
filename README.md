@@ -7,6 +7,7 @@ Notlarınızdan öğrenen, kişiselleştirilmiş öneriler sunan ve beyin fırt�
 ### Genel Bakış
 Notlarınızdan yapay zekaya size özel sınav hazırlaması, yeni yaratıcı fikirler sunması, öğrenme içeriklerini özetlemesi, bilgi boşluklarını tespit etmesi ve kişisel gelişim yolculuğunuzu takip etmesi için AI destekli bir platform.
 Basit samimi tasarımıyla ve güçlü  yapay zekasıyla rakiplerinden ayrılan bir platform!
+[NeuralNotes Gereksinim Analizi.pdf](https://github.com/user-attachments/files/20024278/NeuralNotes.Gereksinim.Analizi.pdf)
 
 ### Geliştirme Aşamaları
 **Aşama 1:** Kişiselleştirilmiş yanıtlar için özenle hazırlanmış komutlar kullanarak harici yapay zekâ API'leriyle entegrasyon
