@@ -1,0 +1,47 @@
+project: NeuralNotes
+
+# Genel Tasarım Kuralları
+- Interface must be minimalist, modern, and aesthetically clean.
+- UI must support both light and dark themes with specified color palettes.
+- Fonts must be readable and feel friendly.
+- Layouts should be responsive, user-centered, and intuitive.
+- Sidebar and content area spacing must remain consistent when toggling visibility.
+
+# UI Components
+- Center box must remain visually centered on the screen regardless of sidebar state.
+- Use rounded corners and soft drop shadows for note previews.
+- “+ Yeni Not” button must be easily accessible.
+- Implement keyboard shortcuts (e.g., Ctrl+N for new note).
+
+# Features
+- Notes must support rich text formatting (bold, italic, bullet points, checklists).
+- Notes should include metadata: title, content, optional image, and tags.
+- AI Assistant must support summarization, note suggestions, search assistance, and brainstorming.
+- AI must analyze note contents to suggest relevant tags.
+
+# AI Integration
+- AI responses must be shown within a fixed assistant panel on the right.
+- The assistant panel must be toggleable without affecting the main content layout.
+- Prioritize performance in AI inference; caching where applicable.
+
+# Security
+- Notes must be encrypted both at rest and during transmission.
+- Users must be informed about data handling via a "Veri ve Gizlilik" section.
+
+# Performance
+- Must work offline (cache first), sync when reconnected.
+- Must efficiently handle large note volumes.
+
+# Feedback & Iteration
+- Add “Geri Bildirim Gönder” button in settings.
+- Include “Beta” badge or bonus perks for early adopters.
+
+# MVP Scope
+- Basic note creation/edit/delete.
+- Basic AI support: summarization, note search, simple suggestions.
+- Tagging system and keyword search.
+- Basic security (encryption).
+-Bak şimdi planlamamızı yapalım her şeyi tek tek tane tane yappmak istiyorum. Ben sana input vermedikçe diğer dosyaları doldurmanı istemiyorum.
+
+
+
