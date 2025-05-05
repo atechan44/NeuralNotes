@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>NeuralNotes Mind Map</title>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            /* Tema renk değişkenleri */
+            --panel-bg: #fff;
+            --panel-text: #222;
+            --button-bg: #f0f0f0;
+            --button-text: #333;
+            --button-border: #ccc;
+        }
+        
+        #canvas {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background-color: #f0f0f0;
+            /* Arka plan için geçici default */
+            transition: background 0.3s;
+            /* Desenler ve gradient için değişkenler */
+            --dot-grid-size: 30px;
+            --grid-size: 30px;
+        }
+        
+        .node {
+            position: absolute;
+            padding: 10px 15px;
+            background: white;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            cursor: grab;
+            user-select: none;
+            z-index: 1;
+            min-width: 50px;
+            text-align: center;
+            transition: opacity 0.3s ease-out, background-color 0.2s ease-out;
+        }
+        
+        .node:active {
+            cursor: grabbing;
+        }
+        
+        #addNodeBtn {
+            /* Bu artık kullanılmıyor ama dursun */
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+        }
+        /* YENİ STİLLER */
+        
+        #actionBar {
+            position: fixed;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #e0e0e0;
+            padding: 10px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            /* Butonlar arası boşluk */
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        #actionBar button,
+        #actionBar .icon-btn {
+            /* Ortak buton stilleri */
+            background: white;
+            border: 1px solid #ccc;
+            padding: 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            /* İkonları ortalamak için */
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.2s;
+            width: 40px;
+            /* Sabit genişlik */
+            height: 40px;
+            /* Sabit yükseklik */
+        }
+        
+        #actionBar button:hover,
+        #actionBar .icon-btn:hover {
+            /* Hover efekti */
+            background-color: #f0f0f0;
+        }
+        
+        #actionBar .icon-btn svg,
+        #actionBar button svg {
+            /* SVG ikon boyutu */
+            width: 24px;
+            height: 24px;
+        }
+        /* --- YENİ STİLLER SONU --- */
+        
+        .node.selected {
+            border-color: blue;
+            box-shadow: 0 0 5px blue;
+        }
+        /* Renk Paleti Stilleri */
+        
+        #colorPicker {
+            position: absolute;
+            /* Konumu JS ile ayarlanacak */
+            background-color: #f8f8f8;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            padding: 10px;
+            display: grid;
+            /* Grid layout */
+            grid-template-columns: repeat(4, 30px);
+            /* 4 sütun */
+            gap: 8px;
+            /* Kutucuklar arası boşluk */
+            z-index: 1001;
+            /* Diğer elemanların üzerinde */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            display: none;
+            /* Başlangıçta gizli */
+        }
+        
+        .color-swatch {
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: 1px solid #eee;
+            /* Hafif kenarlık */
+            transition: transform 0.1s ease-out;
+        }
+        
+        .color-swatch:hover {
+            transform: scale(1.1);
+            /* Hafif büyüme efekti */
+            border-color: #999;
+        }
+        /* --- Renk Paleti Stilleri Sonu --- */
+        /* Yeniden Boyutlandırma Tutamacı Stili - SİLİNDİ */
+        /*
+        .resizer {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #4285F4; 
+            border: 1px solid white;
+            border-radius: 2px;
+            bottom: -1px; 
+            right: -1px;  
+            cursor: nwse-resize; 
+            z-index: 2; 
+        }
+*/
+        /* Yeni node için görünme animasyonu (basitleştirildi) */
+        
+        .node-appear {
+            /* transform kaldırıldı (şimdilik) */
+            opacity: 0;
+            /* Başlangıçta görünmez */
+        }
+        /* Çizgi Silme Butonu Stilleri */
+        
+        #lineDeleteBtn {
+            position: absolute;
+            /* Konumu JS ile ayarlanacak */
+            width: 20px;
+            height: 20px;
+            background-color: rgba(220, 53, 69, 0.8);
+            /* Bootstrap danger rengi, biraz şeffaf */
+            color: white;
+            border: 1px solid rgba(180, 30, 45, 0.9);
+            border-radius: 50%;
+            /* Yuvarlak */
+            cursor: pointer;
+            display: none;
+            /* Başlangıçta gizli */
+            font-family: sans-serif;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+            line-height: 18px;
+            /* 'X'i dikeyde ortala */
+            z-index: 10;
+            /* Çizgilerin biraz üzerinde */
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            transition: transform 0.1s ease-out, background-color 0.1s ease-out;
+            user-select: none;
+            /* Yanlışlıkla seçilmesini engelle */
+        }
+        
+        #lineDeleteBtn:hover {
+            background-color: rgba(220, 53, 69, 1.0);
+            /* Daha belirgin kırmızı */
+            transform: scale(1.1);
+        }
+        /* Opsiyonel: Fare üzerine gelince çizgiyi vurgula - KALDIRILDI */
+        /*
+        #lines line:hover {
+             stroke: #dc3545;
+             stroke-opacity: 0.8;
+        }
+        */
+        
+        #lines {
+            z-index: 100;
+            pointer-events: none;
+        }
+        
+        #lines path,
+        #lines line {
+            pointer-events: stroke;
+        }
+        
+        .connect-point {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: #4caf50;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            right: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 2;
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+            transition: background 0.2s;
+        }
+        
+        .connect-point.active {
+            background: #2196f3;
+        }
+        
+        .connect-mode .node {
+            pointer-events: none;
+        }
+        
+        .connect-mode .connect-point {
+            pointer-events: auto;
+        }
+        /* Noktalı desen */
+        
+        #canvas.bg-dots {
+            background-color: #fafbfc;
+            background-image: radial-gradient(#bdbdbd 1.2px, transparent 1.2px);
+            background-size: var(--dot-grid-size) var(--dot-grid-size);
+        }
+        /* Kareli desen */
+        
+        #canvas.bg-grid {
+            background-color: #fafbfc;
+            background-image: linear-gradient(to right, #e0e0e0 1px, transparent 1px), linear-gradient(to bottom, #e0e0e0 1px, transparent 1px);
+            background-size: var(--grid-size) var(--grid-size);
+        }
+        /* Gradient pastel */
+        
+        #canvas.bg-gradient-pastel {
+            background-image: linear-gradient(120deg, #f8ffae 0%, #43cea2 100%);
+        }
+        /* Gradient mavi-mor */
+        
+        #canvas.bg-gradient-bluepurple {
+            background-image: linear-gradient(120deg, #43cea2 0%, #6a82fb 100%);
+        }
+        /* Gradient pembe-turuncu */
+        
+        #canvas.bg-gradient-pinkorange {
+            background-image: linear-gradient(120deg, #ff9a9e 0%, #fad0c4 100%);
+        }
+        /* Gradient yeşil-mavi */
+        
+        #canvas.bg-gradient-greenblue {
+            background-image: linear-gradient(120deg, #a8edea 0%, #43cea2 100%);
+        }
+        /* Gradient siyah-beyaz */
+        
+        #canvas.bg-gradient-blackwhite {
+            background-image: linear-gradient(120deg, #000 0%, #fff 100%);
+        }
+        /* Kullanıcı görseli */
+        
+        #canvas.bg-image {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        /* Temalar */
+        
+        body.theme-light {
+            background: #f0f0f0;
+            color: #222;
+            --panel-bg: #fff;
+            --panel-text: #222;
+            --button-bg: #f0f0f0;
+            --button-text: #333;
+            --button-border: #ccc;
+        }
+        
+        body.theme-dark {
+            background: #23272f;
+            color: #f0f0f0;
+            --panel-bg: #2c2f36;
+            --panel-text: #f0f0f0;
+            --button-bg: #444;
+            --button-text: #eee;
+            --button-border: #555;
+        }
+        
+        body.theme-minimal {
+            background: #fff;
+            color: #222;
+            --panel-bg: #fff;
+            --panel-text: #222;
+            --button-bg: #f8f8f8;
+            --button-text: #333;
+            --button-border: #ddd;
+        }
+        
+        body.theme-colorful {
+            background: linear-gradient(135deg, #f8ffae 0%, #43cea2 100%);
+            color: #333;
+            --panel-bg: rgba(255, 255, 255, 0.9);
+            /* Hafif şeffaf beyaz */
+            --panel-text: #333;
+            --button-bg: rgba(255, 255, 255, 0.7);
+            --button-text: #333;
+            --button-border: #aaa;
+        }
+        
+        body.theme-notebook {
+            background: #fdf6e3;
+            color: #222;
+            --panel-bg: #fffbe6;
+            --panel-text: #222;
+            --button-bg: #fdf6e3;
+            --button-text: #333;
+            --button-border: #e0c97f;
+        }
+        /* Tema node ve action bar için örnek (geliştirilebilir) */
+        
+        body.theme-dark .node {
+            background: #2c2f36;
+            color: #f0f0f0;
+            border-color: #444;
+        }
+        
+        body.theme-dark #actionBar {
+            background: #23272f;
+            border-color: #444;
+        }
+        
+        body.theme-notebook .node {
+            background: #fffbe6;
+            border-color: #e0c97f;
+        }
+        
+        body.theme-notebook #actionBar {
+            background: #fdf6e3;
+            border-color: #e0c97f;
+        }
+        
+        #canvas.bg-gradient-image {
+            background: radial-gradient(circle at 20% 10%, #2ec7e6 0%, #0a1931 80%), radial-gradient(circle at 80% 90%, #e16b8c 0%, transparent 80%);
+            background-blend-mode: lighten;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .mini-gradient-preview {
+            display: block;
+            width: 100%;
+            height: 100%;
+            border-radius: inherit;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            /* border: none;  // border tamamen kaldırıldı */
+        }
+        
+        .mini-gradient-preview.pastel {
+            background: linear-gradient(120deg, #f8ffae 0%, #43cea2 100%);
+        }
+        
+        .mini-gradient-preview.bluepurple {
+            background: linear-gradient(120deg, #43cea2 0%, #6a82fb 100%);
+        }
+        
+        .mini-gradient-preview.pinkorange {
+            background: linear-gradient(120deg, #ff9a9e 0%, #fad0c4 100%);
+        }
+        
+        .mini-gradient-preview.image {
+            background: radial-gradient(circle at 20% 10%, #2ec7e6 0%, #0a1931 80%), radial-gradient(circle at 80% 90%, #e16b8c 0%, transparent 80%);
+            background-blend-mode: lighten;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .mini-gradient-preview.none {
+            background: none;
+            border: 2px solid #bbb;
+            box-sizing: border-box;
+        }
+        
+        .bg-gradient-btn {
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            border: 1.5px solid var(--button-border, #ccc);
+            /* Use CSS variable */
+            border-radius: 7px;
+            background: var(--panel-bg, #fff);
+            /* Match panel bg */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: border-color 0.18s, box-shadow 0.18s, background 0.18s;
+            box-sizing: border-box;
+            margin-right: 5px;
+            /* Add spacing */
+            margin-bottom: 5px;
+            /* Add spacing if they wrap */
+            vertical-align: middle;
+            /* Align with labels */
+            cursor: pointer;
+        }
+        
+        .bg-gradient-btn svg,
+        .bg-gradient-btn .mini-gradient-preview {
+            width: 100%;
+            height: 100%;
+            border-radius: inherit;
+            display: block;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .mini-gradient-preview {
+            background: radial-gradient(circle at 20% 10%, #2ec7e6 0%, #0a1931 80%), radial-gradient(circle at 80% 90%, #e16b8c 0%, transparent 80%);
+            background-blend-mode: lighten;
+            background-size: cover;
+            background-position: center;
+            border: none;
+        }
+        
+        .mini-theme-preview {
+            display: block;
+            width: 100%;
+            height: 100%;
+            border-radius: inherit;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            /* Her zaman görünür olması için hafif bir gölge veya çerçeve: */
+            box-shadow: 0 0 0 1.5px rgba(120, 120, 120, 0.5), 0 1px 4px rgba(0, 0, 0, 0.08);
+            /* Adjusted shadow */
+            border: 1.5px solid #bbb;
+        }
+        
+        .mini-theme-preview.light {
+            background: #fffde7;
+        }
+        
+        .mini-theme-preview.dark {
+            background: #23272f;
+        }
+        
+        .mini-theme-preview.minimal {
+            background: #fff;
+        }
+        
+        .mini-theme-preview.colorful {
+            background: linear-gradient(135deg, #f8ffae 0%, #43cea2 100%);
+        }
+        
+        .mini-theme-preview.notebook {
+            background: #fffbe6;
+            border-left: 3px solid #e0c97f;
+            border-right: 3px solid #e0c97f;
+        }
+        
+        .bg-theme-btn {
+            overflow: hidden;
+        }
+        /* Ensure theme styles for buttons override defaults */
+        
+        body.theme-dark .bg-pattern-btn,
+        body.theme-dark .bg-gradient-btn,
+        body.theme-dark .bg-theme-btn {
+            background: var(--panel-bg);
+            /* Use panel bg from theme */
+            border-color: var(--button-border);
+        }
+        
+        body.theme-dark .bg-pattern-btn:hover,
+        body.theme-dark .bg-gradient-btn:hover,
+        body.theme-dark .bg-theme-btn:hover {
+            background: #3a3e45;
+            border-color: #777;
+        }
+        
+        body.theme-notebook .bg-pattern-btn,
+        body.theme-notebook .bg-gradient-btn,
+        body.theme-notebook .bg-theme-btn {
+            background: var(--panel-bg);
+            border-color: var(--button-border);
+        }
+        /* Add other theme specific button styles if needed */
+        /* Pattern Button Styling */
+        
+        .bg-pattern-btn {
+            width: 40px;
+            /* Match size */
+            height: 40px;
+            /* Match size */
+            padding: 5px;
+            border: 1.5px solid var(--button-border, #ccc);
+            /* Use CSS variable */
+            border-radius: 7px;
+            background: var(--panel-bg, #fff);
+            /* Match panel bg */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: border-color 0.18s, box-shadow 0.18s, background 0.18s;
+            box-sizing: border-box;
+            margin-right: 5px;
+            /* Add spacing */
+            margin-bottom: 5px;
+            vertical-align: middle;
+            /* Align with labels */
+            cursor: pointer;
+        }
+        
+        .bg-pattern-btn svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .bg-pattern-btn svg circle,
+        .bg-pattern-btn svg rect,
+        .bg-pattern-btn svg line {
+            stroke: var(--panel-text, #888);
+            /* Make pattern icons theme aware */
+            fill: var(--panel-text, #bbb);
+            /* Make pattern icons theme aware */
+        }
+        
+        .bg-pattern-btn[data-pattern="none"] svg rect {
+            fill: var(--panel-bg, #fafbfc);
+            /* Match panel bg for 'none' pattern */
+            stroke: var(--button-border, #eee);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Eski Buton Kaldırıldı -->
+    <!-- <button id="addNodeBtn">+ Yeni Node</button> -->
+
+    <!-- YENİ ACTION BAR -->
+    <div id="actionBar">
+        <button id="deleteNodeBtn" title="Seçili Node'u Sil (Delete/Backspace)">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+                <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd" />
+            </svg>
+        </button>
+        <button id="addNodeFromBarBtn" title="Yeni Node Ekle (+)">
+             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+                <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
+            </svg>
+        </button>
+        <button id="colorNodeBtn" class="icon-btn" title="Node Rengi (Yakında)">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path fill-rule="evenodd" d="M20.599 1.5c-.376 0-.743.111-1.055.32l-5.08 3.385a18.747 18.747 0 0 0-3.471 2.987 10.04 10.04 0 0 1 4.815 4.815 18.748 18.748 0 0 0 2.987-3.472l3.386-5.079A1.902 1.902 0 0 0 20.599 1.5Zm-8.3 14.025a18.76 18.76 0 0 0 1.896-1.207 8.026 8.026 0 0 0-4.513-4.513A18.75 18.75 0 0 0 8.475 11.7l-.278.5a5.26 5.26 0 0 1 3.601 3.602l.502-.278ZM6.75 13.5A3.75 3.75 0 0 0 3 17.25a1.5 1.5 0 0 1-1.601 1.497.75.75 0 0 0-.7 1.123 5.25 5.25 0 0 0 9.8-2.62 3.75 3.75 0 0 0-3.75-3.75Z" clip-rule="evenodd" />
+            </svg>
+        </button>
+        <button id="connectBtn" class="icon-btn" title="Bağlantı Modu">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+                <circle cx="6" cy="12" r="2"/>
+                <circle cx="18" cy="12" r="2"/>
+                <rect x="7.5" y="11" width="9" height="2" rx="1"/>
+            </svg>
+        </button>
+        <!-- Arka Plan Seçici Butonu -->
+        <button id="backgroundBtn" class="icon-btn" title="Arka Plan Seç">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+                <rect x="3" y="3" width="18" height="18" rx="4" fill="#e0e0e0" stroke="#888" stroke-width="1.5"/>
+                <circle cx="8" cy="8" r="2" fill="#bdbdbd"/>
+                <rect x="12" y="12" width="6" height="6" rx="1" fill="#bdbdbd"/>
+            </svg>
+        </button>
+        <!-- Shape Butonu Silindi -->
+        <!--
+        <button id="shapeNodeBtn" title="Node Şekli (Yakında)">
+             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+                 <path d="M21.75 12.004a9.75 9.75 0 0 1-9.68 9.745 9.75 9.75 0 0 1-9.68-9.745A9.75 9.75 0 0 1 12.07 2.26a9.75 9.75 0 0 1 9.68 9.744Z"/>
+             </svg>
+        </button>
+        -->
+    </div>
+
+    <div id="canvas">
+
+    </div>
+    <svg id="lines" style="position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 100;"></svg>
+
+    <!-- Renk Paleti -->
+    <div id="colorPicker">
+        <!-- Renk kutucukları JS ile eklenecek -->
+    </div>
+
+    <!-- Çizgi Silme Butonu -->
+    <div id="lineDeleteBtn">X</div>
+
+    <!-- Arka Plan Seçici Paneli -->
+    <div id="backgroundPanel" style="display:none; position:fixed; left:70px; top:50%; transform:translateY(-50%); /* background:#fff; removed */ border:1px solid #ccc; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.15); z-index:2000; padding:18px 20px; min-width:220px; background: var(--panel-bg, #fff); color: var(--panel-text, #222); transition: background 0.3s, color 0.3s, border-color 0.3s;">
+        <h4 style="margin-top:0; margin-bottom: 15px; color: inherit;">Arka Plan Seç</h4>
+        <div style="margin-bottom:15px;"> /* Section spacing */
+            <label style="display: block; margin-bottom: 8px; font-weight: bold; color: inherit;">Desen:</label>
+            <button class="bg-pattern-btn" data-pattern="dots" title="Noktalı">
+                <svg width="28" height="28" viewBox="0 0 28 28"><circle cx="14" cy="14" r="2"/><circle cx="7" cy="7" r="2"/><circle cx="21" cy="7" r="2"/><circle cx="7" cy="21" r="2"/><circle cx="21" cy="21" r="2"/></svg>
+            </button>
+            <button class="bg-pattern-btn" data-pattern="grid" title="Kareli">
+                <svg width="28" height="28"><rect x="2" y="2" width="24" height="24" fill="none" stroke="#bbb" stroke-width="1.5"/><line x1="2" y1="14" x2="26" y2="14" stroke="#bbb" stroke-width="1"/><line x1="14" y1="2" x2="14" y2="26" stroke="#bbb" stroke-width="1"/></svg>
+            </button>
+            <button class="bg-pattern-btn" data-pattern="none" title="Düz">
+                <svg width="28" height="28"><rect x="2" y="2" width="24" height="24" fill="#fafbfc" stroke="#eee" stroke-width="1.5"/></svg>
+            </button>
+        </div>
+        <div style="margin-bottom:15px;"> /* Section spacing */
+            <label style="display: block; margin-bottom: 8px; font-weight: bold; color: inherit;">Gradient:</label>
+            <button class="bg-gradient-btn" data-gradient="none" title="Gradient Yok">
+                <span class="mini-gradient-preview none"></span>
+            </button>
+            <button class="bg-gradient-btn" data-gradient="pastel" title="Pastel Gradient">
+                <span class="mini-gradient-preview pastel"></span>
+            </button>
+            <button class="bg-gradient-btn" data-gradient="bluepurple" title="Mavi-Mor Gradient">
+                <span class="mini-gradient-preview bluepurple"></span>
+            </button>
+            <button class="bg-gradient-btn" data-gradient="pinkorange" title="Pembe-Turuncu Gradient">
+                <span class="mini-gradient-preview pinkorange"></span>
+            </button>
+            <button class="bg-gradient-btn" data-gradient="image" title="Görsel Gradient">
+                <span class="mini-gradient-preview image"></span>
+            </button>
+        </div>
+        <div style="margin-bottom:15px;"> /* Section spacing */
+            <label style="display: block; margin-bottom: 8px; font-weight: bold; color: inherit;">Tema:</label>
+            <button class="bg-theme-btn" data-theme="light" title="Açık Tema">
+                <span class="mini-theme-preview light"></span>
+            </button>
+            <button class="bg-theme-btn" data-theme="dark" title="Koyu Tema">
+                <span class="mini-theme-preview dark"></span>
+            </button>
+            <button class="bg-theme-btn" data-theme="minimal" title="Minimal Tema">
+                <span class="mini-theme-preview minimal"></span>
+            </button>
+            <button class="bg-theme-btn" data-theme="colorful" title="Renkli Tema">
+                <span class="mini-theme-preview colorful"></span>
+            </button>
+            <button class="bg-theme-btn" data-theme="notebook" title="Not Defteri">
+                <span class="mini-theme-preview notebook"></span>
+            </button>
+        </div>
+        <div style="margin-bottom:15px;"> /* Section spacing */
+            <label style="display: block; margin-bottom: 8px; font-weight: bold; color: inherit;">Izgara Boyutu:</label>
+            <input type="range" id="gridSizeSlider" min="10" max="80" value="30" step="2" style="width:120px; vertical-align: middle;">
+            <span id="gridSizeValue" style="color: inherit; display: inline-block; min-width: 25px; text-align: right;">30</span> px
+        </div>
+        <div style="margin-bottom:15px;"> /* Section spacing */
+            <label style="display: block; margin-bottom: 8px; font-weight: bold; color: inherit;">Görsel Yükle:</label>
+            <input type="file" id="bgImageInput" accept="image/*" style="color: inherit; margin-right: 5px;">
+            <button id="removeBgImageBtn" style="display:none; padding: 4px 8px; border: 1px solid var(--button-border, #ccc); border-radius: 4px; background: var(--button-bg, #f0f0f0); color: var(--button-text, #333); cursor: pointer;">Görseli Kaldır</button>
+        </div>
+        <button id="closeBgPanelBtn" style="margin-top:8px; padding: 6px 12px; border: 1px solid var(--button-border, #ccc); border-radius: 5px; background: var(--button-bg, #f0f0f0); color: var(--button-text, #333); cursor: pointer; transition: background-color 0.2s;">Kapat</button>
+    </div>
+
+    <script src="index.js"></script>
+</body>
+
+</html>
