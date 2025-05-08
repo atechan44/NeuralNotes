@@ -13,7 +13,8 @@ An AI-powered note-taking platform that learns from your notes, offers personali
 
 A smart note-taking tool powered by AI that prepares customized quizzes based on your notes, offers creative new ideas, summarizes learning content, detects knowledge gaps, and tracks your personal development journey. With its simple and friendly design, paired with a powerful AI engine, it stands out from the competition!
 
-You can find our indie-style requirements analysis here: [NeuralNotes Requirements Analysis.pdf](https://github.com/user-attachments/files/20024278/NeuralNotes.Gereksinim.Analizi.pdf)
+You can find our indie-style requirements analysis here: [NeuralNotes Requirements Analysis.pdf](https://github.com/user-attachments/files/20109807/NeuralNotes.Requirements.Analysis.pdf)
+
 
 ---
 
