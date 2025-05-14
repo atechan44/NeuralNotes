@@ -1,0 +1,136 @@
+Create a clean, scalable project foundation for a web app named "NeuralNotes".
+
+## Requirements:
+
+1. **Framework & Tooling**:
+   - Use **React 19** with **TypeScript**.
+   - Use **Vite** as the build tool.
+   - Use **Tailwind CSS** for styling, with support for both **dark and light themes** using the class strategy (`darkMode: "class"`).
+   - Include **Framer Motion** for animations, but ensure all animations are optimized and non-blocking (e.g. use `layout` or `lazyMotion` for performance).
+   - Use **ESLint** and **Prettier** with proper config.
+   - Add **react-i18next** and set up a basic structure for internationalization (i18n), ensuring UI elements won't break or overflow when translated via Google Translate or internal translation.
+
+2. **Performance Optimizations**:
+   - Ensure code splitting and tree shaking work out of the box.
+   - Optimize for mobile and low-end devices; avoid layout shift and lag in animation-heavy views.
+   - Add a test `NoteCard` component with subtle animations to demonstrate safe rendering at scale.
+   - Use semantic HTML and accessible markup where possible.
+
+3. **Dark/Light Theme Compatibility**:
+   - Implement Tailwind's dark mode switcher using `useEffect` and `localStorage` with a toggle button.
+   - Ensure there are no color flickers or hydration issues when switching themes on first load.
+
+4. **Folder Structure**:
+   - Suggest a modular and scalable folder structure for components, hooks, pages, assets, and translations.
+
+5. **Optional but helpful**:
+   - Add a basic layout with sidebar, top bar, and content area using Tailwind grid/flex.
+   - Use CSS variables where possible to allow easier theming.
+   - Include basic responsiveness.
+
+Generate the initial codebase with one simple animated component (like a fading note card), working light/dark toggle, and placeholder text set up for i18n.
+
+I'm building an AI-powered note-taking application called **NeuralNotes**.
+
+The goal is to go beyond traditional note-taking by making it **intelligent, responsive, and supportive** through artificial intelligence. Here is what the project is and what it must support:
+
+---
+
+## 💡 NeuralNotes – Project Vision
+
+A minimalistic, fast, and modern note-taking web app where users can:
+
+- **Write notes freely** in markdown/plain text
+- **Summarize** those notes using AI
+- **Generate insights**, questions, and related ideas
+- See **concept maps** or extracted keywords
+- Switch between **dark/light themes** with no layout shift or flicker
+- Translate the UI (Google Translate or internal i18n) **without layout breaking**
+
+---
+
+## 🧠 Key Features Required in Project Structure
+
+- **React 19 + TypeScript**
+- **Vite** as the build tool
+- **Tailwind CSS** for styling (with `darkMode: "class"` setup)
+- **Framer Motion** for light, performant animations
+- **react-i18next** or a similar library for i18n support
+- Use **ESLint**, **Prettier**, and **a modular folder structure**
+- Support for **Google Translate** compatibility: UI must not break when auto-translated
+- Responsive, mobile-first design
+
+---
+
+## 🛠 Dev Notes
+
+- Animations must not block layout or cause jank. Use `lazyMotion`, `layout`, etc.
+- Use semantic HTML and accessible practices.
+- Create a base layout: sidebar + topbar + content area
+- Add one simple example component: a note card that fades/slides in on mount and demonstrates responsiveness, theme-switch, and translation readiness
+
+---
+
+Please scaffold this project foundation with all above principles, optimized for future AI agent integration.
+
+🎨 Tema Desteği
+Tailwind darkMode: 'class' ile body veya html tagine dark sınıfı basarak kontrol edilir.
+ThemeToggle.tsx bileşeni ile bu sınıf localStorage üzerinden kalıcı yapılabilir.
+
+⚡ Performans & Animasyonlar
+framer-motion ile sidebar, not kutuları ve butonlara yumuşak animasyonlar eklenir.
+
+Lazy load + React.memo + shallow state ile grid performansı korunur.
+
+Mobilde ve masaüstünde responsive grid sistemi (grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4)
+
+🔍 Search & Filter
+SearchBar.tsx: Input içine yazınca filtreleme
+
+TagFilter.tsx: Tıklanabilir etiketler (All, Myself, Location vb.)
+
+Bunların state'leri bir hook (örn: useNotesFilter) içinde yönetilir
+
+src/
+├── assets/                  # Logo, ikon, görsel gibi statik içerikler
+│
+├── components/              # Reusable bileşenler
+│   ├── NoteCard.tsx         # Tekil not kutusu
+│   ├── SearchBar.tsx        # Arama çubuğu
+│   ├── TagFilter.tsx        # All / Myself / Location / Shared filtreleri
+│   ├── Sidebar.tsx          # Slide-in sidebar
+│   ├── SidebarToggle.tsx    # Aç/kapa butonu
+│   ├── ThemeToggle.tsx      # Karanlık/açık tema anahtarı
+│   ├── AnimatedIcon.tsx     # Framer motion destekli ikonlar
+│   └── Button.tsx           # Primary / Secondary butonlar
+│
+├── features/                # Uygulamanın modülleri
+│   ├── notes/               # Notlar özelliği
+│   │   ├── NotesGrid.tsx    # Grid görünümü
+│   │   ├── NoteEditor.tsx   # Yeni not oluşturma / düzenleme ekranı
+│   │   └── notesSlice.ts    # State yönetimi için
+│   └── folders/             # Klasör sistemi için
+│
+├── hooks/                   # Özel hook'lar
+│   ├── useTheme.ts          # Tema kontrolü için
+│   ├── useNotes.ts          # Not verilerini yönetmek için
+│   └── useSidebar.ts        # Sidebar durumunu kontrol etmek için
+│
+├── layouts/
+│   └── MainLayout.tsx       # Ana sayfa düzeni
+│
+├── pages/
+│   ├── Home.tsx             # Ana sayfa
+│   └── NotePage.tsx         # Tekil not görünümü
+│
+├── i18n/
+│   ├── en.json              # İngilizce çeviriler
+│   ├── tr.json              # Türkçe çeviriler
+│   └── i18n.ts              # i18n konfigürasyonu
+│
+├── styles/
+│   ├── globals.css          # Global stiller
+│   └── tailwind.config.js   # Tailwind yapılandırması
+│
+├── App.tsx                  # Ana uygulama bileşeni
+└── main.tsx                 # Uygulama giriş noktası

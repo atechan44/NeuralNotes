@@ -1,0 +1,127 @@
+{
+    "version": 1,
+    "rules": [{
+            "id": "NEURALNOTES_GENERAL_PRINCIPLES",
+            "title": "General Development Principles for NeuralNotes",
+            "description": "Core guidelines for building a robust, performant, and maintainable NeuralNotes application.",
+            "tags": ["architecture", "best-practices"],
+            "guidelines": [{
+                    "id": "CROSS_PLATFORM_COMPATIBILITY",
+                    "severity": "error",
+                    "message": "Ensure the application is fully functional and provides a consistent user experience across all major target platforms (web - Chrome, Firefox, Safari, Edge; consider Electron or similar for potential desktop versions). Conduct regular cross-browser testing.",
+                    "recommendation": "Utilize web standards and feature detection. Employ responsive design techniques from the outset. If using a framework, leverage its cross-platform capabilities."
+                },
+                {
+                    "id": "MODERN_TECHNOLOGIES",
+                    "severity": "warning",
+                    "message": "Employ modern, well-maintained, and community-supported frontend technologies. Prioritize technologies known for performance and compatibility (e.g., React/Vue/Svelte with TypeScript).",
+                    "recommendation": "Evaluate technology choices based on project requirements, team expertise, performance benchmarks, and ecosystem support. Ensure chosen libraries/frameworks are actively developed and have good documentation."
+                },
+                {
+                    "id": "CODE_QUALITY_MAINTAINABILITY",
+                    "severity": "error",
+                    "message": "Write clean, modular, and well-documented code. Follow a consistent coding style (enforced by linters like ESLint and formatters like Prettier). Code should be easily understandable and maintainable by other developers.",
+                    "recommendation": "Use meaningful variable and function names. Break down complex components into smaller, reusable units. Write comments for non-obvious logic. Implement unit and integration tests."
+                },
+                {
+                    "id": "PERFORMANCE_OPTIMIZATION",
+                    "severity": "error",
+                    "message": "Prioritize application performance. Animations must be smooth (target 60fps), and the app should remain responsive even under heavy user load or with a large number of notes. Avoid performance bottlenecks.",
+                    "recommendation": "Optimize asset delivery (image compression, code splitting, lazy loading). Use efficient state management. Prefer CSS animations/transitions for simple effects. Profile and debug performance issues regularly. Virtualize long lists if necessary."
+                },
+                {
+                    "id": "ROBUST_ERROR_HANDLING",
+                    "severity": "warning",
+                    "message": "Implement comprehensive error handling to gracefully manage unexpected situations and provide informative feedback to the user without crashing the application.",
+                    "recommendation": "Use try-catch blocks for potentially failing operations. Display user-friendly error messages. Log errors for debugging purposes."
+                }
+            ]
+        },
+        {
+            "id": "NEURALNOTES_UI_UX",
+            "title": "UI/UX Implementation Guidelines",
+            "description": "Ensuring a consistent, intuitive, and visually appealing user interface as per the design.",
+            "tags": ["ui", "ux", "design"],
+            "guidelines": [{
+                    "id": "DESIGN_ADHERENCE",
+                    "severity": "error",
+                    "message": "Strictly adhere to the provided UI design mockups and screenshot (layout, typography, color palettes, spacing). The final implementation should closely mirror the visual specifications.",
+                    "recommendation": "Use a design system or component library if available. Regularly compare implementation with design mockups. Pay attention to detail."
+                },
+                {
+                    "id": "INTERACTIVE_FEEDBACK",
+                    "severity": "warning",
+                    "message": "All interactive elements (buttons, inputs, links, draggable items) must provide clear visual feedback for hover, focus, active, and disabled states.",
+                    "recommendation": "Implement consistent styling for interactive states across the application."
+                },
+                {
+                    "id": "ANIMATION_STANDARDS",
+                    "severity": "error",
+                    "message": "Animations should be fluid, purposeful, and enhance the user experience. Specifically, chat opening/closing (animating down), welcome message disappearance, notes area blurring, and chat input repositioning must be smooth and well-orchestrated.",
+                    "recommendation": "Use CSS transitions and animations for performance where possible. For complex JavaScript animations, ensure they are optimized and do not cause jank. Test animations on various devices."
+                },
+                {
+                    "id": "RESPONSIVE_SCALABLE_UI",
+                    "severity": "error",
+                    "message": "The UI must be responsive and adapt gracefully to different screen sizes and orientations. Note content (text, images) must be scalable. The notes grid layout (left-to-right, then wrap) should adjust dynamically.",
+                    "recommendation": "Use responsive design techniques (flexbox, grid, media queries). Ensure font sizes and image dimensions can scale appropriately. Test on multiple screen resolutions."
+                },
+                {
+                    "id": "NOTE_CARD_DYNAMIC_SIZING",
+                    "severity": "warning",
+                    "message": "Implement note card sizing based on content length, with defined reference heights for different content types (e.g., title-only like 'Discovery eu', text, image+text). For notes with an image, title, and text, ensure the first two lines of text are visible if they exist. The last added image should be the preview if multiple images exist.",
+                    "recommendation": "Develop a clear logic for calculating note heights and displaying content previews. Handle content overflow gracefully."
+                },
+                {
+                    "id": "DATE_INTERACTION_BOTTOM_BAR",
+                    "severity": "warning",
+                    "message": "Implement the note date hover effect (1-second white circle) and click action, which reveals a theme-compliant bottom bar (containing New Folder, Ask AI, Trash) for recent notes at the bottom right.",
+                    "recommendation": "Ensure the interaction is intuitive and the bottom bar is styled according to the active theme."
+                }
+            ]
+        },
+        {
+            "id": "NEURALNOTES_I18N_L10N",
+            "title": "Internationalization and Localization",
+            "description": "Guidelines for making NeuralNotes adaptable to different languages and regions.",
+            "tags": ["internationalization", "localization"],
+            "guidelines": [{
+                    "id": "I18N_DESIGN",
+                    "severity": "error",
+                    "message": "Design and implement components with localization in mind from the outset. Ensure fast adaptation and UI consistency when switching languages.",
+                    "recommendation": "Use a dedicated i18n library (e.g., i18next, react-i18next). Store all user-facing strings in translation files. Avoid hardcoding text."
+                },
+                {
+                    "id": "TEXT_DIRECTIONALITY",
+                    "severity": "warning",
+                    "message": "Consider text directionality (LTR/RTL) if supporting languages like Arabic or Hebrew. UI layouts should adapt accordingly.",
+                    "recommendation": "Use CSS logical properties. Test with RTL languages if they are in scope."
+                }
+            ]
+        },
+        {
+            "id": "NEURALNOTES_THEMING",
+            "title": "Theming Support",
+            "description": "Implementing and managing light and dark themes.",
+            "tags": ["theming", "ui"],
+            "guidelines": [{
+                "id": "THEME_SYSTEM",
+                "severity": "error",
+                "message": "Implement a flexible theming system to support distinct light and dark modes. All UI components, including the dynamically appearing bottom bar, must adapt correctly to theme changes.",
+                "recommendation": "Use CSS variables for theme colors, fonts, and other style properties. Provide a mechanism for users to switch themes. Ensure high contrast ratios for readability in both themes."
+            }]
+        },
+        {
+            "id": "NEURALNOTES_ACCESSIBILITY",
+            "title": "Accessibility (a11y)",
+            "description": "Ensuring NeuralNotes is usable by people with disabilities.",
+            "tags": ["accessibility", "a11y"],
+            "guidelines": [{
+                "id": "WCAG_COMPLIANCE",
+                "severity": "warning",
+                "message": "Strive to follow Web Content Accessibility Guidelines (WCAG) 2.1 Level AA.",
+                "recommendation": "Use semantic HTML. Provide text alternatives for non-text content. Ensure keyboard navigability. Maintain sufficient color contrast."
+            }]
+        }
+    ]
+}
