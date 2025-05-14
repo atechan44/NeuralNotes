@@ -1,0 +1,100 @@
+{
+    "app": {
+        "name": "NeuralNotes",
+        "tagline": "Modern, yapay zeka destekli not alma uygulaması",
+        "searchTitle": "Size nasıl yardımcı olabilirim?"
+    },
+    "common": {
+        "loading": "Yükleniyor...",
+        "error": "Bir hata oluştu",
+        "save": "Kaydet",
+        "cancel": "İptal",
+        "delete": "Sil",
+        "edit": "Düzenle",
+        "create": "Oluştur",
+        "search": "Ara",
+        "filter": "Filtrele",
+        "noResults": "Sonuç bulunamadı",
+        "back": "Geri",
+        "next": "İleri",
+        "previous": "Önceki"
+    },
+    "sidebar": {
+        "home": "Ana Sayfa",
+        "newNote": "Yeni Not",
+        "settings": "Ayarlar"
+    },
+    "theme": {
+        "light": "Açık Tema",
+        "dark": "Koyu Tema",
+        "toggle": "Tema değiştir",
+        "switchToLight": "Açık temaya geç",
+        "switchToDark": "Koyu temaya geç"
+    },
+    "notes": {
+        "title": "Notlar",
+        "newNote": "Yeni Not",
+        "noteTitle": "Not Başlığı",
+        "noteContent": "Not İçeriği",
+        "noteDate": "Oluşturulma tarihi",
+        "emptyNotes": "Henüz not yok. İlk notunuzu oluşturun!",
+        "searchNotes": "Notlarda ara...",
+        "askAnything": "Herhangi bir şey sorun",
+        "tags": "Etiketler",
+        "addTag": "Etiket ekle",
+        "summary": "Özet",
+        "generateSummary": "Özet Oluştur",
+        "insights": "İçgörüler",
+        "generateInsights": "İçgörü Oluştur",
+        "sortBy": {
+            "title": "Sıralama",
+            "newest": "En Yeni",
+            "oldest": "En Eski",
+            "alphabetical": "Alfabetik",
+            "lastUpdated": "Son Güncellenen"
+        },
+        "viewAs": {
+            "title": "Görünüm",
+            "grid": "Grid Görünümü",
+            "list": "Liste Görünümü"
+        },
+        "delete": {
+            "confirm": "Bu notu silmek istediğinizden emin misiniz?",
+            "warning": "Bu işlem geri alınamaz.",
+            "success": "Not başarıyla silindi"
+        }
+    },
+    "tags": {
+        "title": "Etiketler",
+        "all": "Tümü",
+        "personal": "Kişisel",
+        "work": "İş",
+        "important": "Önemli",
+        "idea": "Fikir"
+    },
+    "settings": {
+        "title": "Ayarlar",
+        "language": "Dil",
+        "theme": "Tema",
+        "profile": "Profil",
+        "notifications": "Bildirimler",
+        "privacy": "Gizlilik",
+        "about": "Hakkında"
+    },
+    "auth": {
+        "login": "Giriş Yap",
+        "signup": "Kaydol",
+        "logout": "Çıkış Yap",
+        "email": "E-posta",
+        "password": "Şifre",
+        "username": "Kullanıcı Adı"
+    },
+    "errors": {
+        "required": "Bu alan zorunludur",
+        "invalid": "Geçersiz değer",
+        "minLength": "En az {{count}} karakter olmalıdır",
+        "maxLength": "En fazla {{count}} karakter olmalıdır",
+        "passwordMismatch": "Şifreler eşleşmiyor",
+        "unknown": "Bilinmeyen bir hata oluştu"
+    }
+}
