@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
-import { DEFAULT_THEME, THEME_STORAGE_KEY, THEMES, ThemeType } from '../config/constants';
+import { useEffect, useState } from 'react';
+
+type Theme = 'light' | 'dark';
 
 /**
  * Tema yönetimi için hook.
@@ -8,50 +9,38 @@ import { DEFAULT_THEME, THEME_STORAGE_KEY, THEMES, ThemeType } from '../config/c
  * - localStorage üzerinden tema persistance
  * - İlk yüklemede sistem temasını kullanma veya localStorage'den okuma
  */
-export function useTheme() {
-  // localStorage'dan tema tercihini al veya varsayılan olarak DEFAULT_THEME'i kullan
-  const [theme, setTheme] = useState<ThemeType>(() => {
-    // localStorage'dan kaydedilmiş tema varsa onu kullan
-    const savedTheme = localStorage.getItem(THEME_STORAGE_KEY) as ThemeType | null;
-    if (savedTheme && Object.values(THEMES).includes(savedTheme as ThemeType)) {
-      return savedTheme as ThemeType;
+export const useTheme = () => {
+  // Initialize theme from localStorage or system preference
+  const [theme, setTheme] = useState<Theme>(() => {
+    // Check for stored preference
+    const storedTheme = localStorage.getItem('theme') as Theme | null;
+    if (storedTheme) {
+      return storedTheme;
     }
-
-    // Kaydedilmiş tema yoksa, sistem temasını kontrol et
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      return THEMES.DARK;
-    }
-
-    // Hiçbiri yoksa varsayılan temayı kullan
-    return DEFAULT_THEME;
+    
+    // Check system preference
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    return prefersDark ? 'dark' : 'light';
   });
 
-  // Tema değiştiğinde HTML'deki class'ı güncelle ve localStorage'a kaydet
+  // Update classList and localStorage when theme changes
   useEffect(() => {
-    // HTMLde tema class'ını güncelle
-    if (theme === THEMES.DARK) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-
-    // localStorage'a tema tercihini kaydet
-    localStorage.setItem(THEME_STORAGE_KEY, theme);
+    const root = window.document.documentElement;
+    
+    // Remove both classes and add the current one
+    root.classList.remove('light', 'dark');
+    root.classList.add(theme);
+    
+    // Save the theme preference to localStorage
+    localStorage.setItem('theme', theme);
   }, [theme]);
 
-  // Temayı değiştirmek için kullanılacak fonksiyon
+  // Toggle theme function
   const toggleTheme = () => {
-    setTheme(prevTheme => 
-      prevTheme === THEMES.LIGHT ? THEMES.DARK : THEMES.LIGHT
-    );
+    setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
   };
 
-  return {
-    theme,
-    setTheme,
-    toggleTheme,
-    isDarkTheme: theme === THEMES.DARK
-  };
-}
+  return { theme, toggleTheme };
+};
 
 export default useTheme;

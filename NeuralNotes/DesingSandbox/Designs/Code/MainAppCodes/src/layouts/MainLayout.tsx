@@ -1,40 +1,67 @@
-import { Outlet } from 'react-router-dom';
+import React from 'react';
+import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
+import ThemeToggle from '../components/ThemeToggle';
 
-/**
- * Ana sayfa düzeni bileşeni
- * Minimal sidebar ve boş içerik alanı
- */
-const MainLayout = () => {
+interface MainLayoutProps {
+  children: React.ReactNode;
+}
+
+const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
+  const { t } = useTranslation();
+  
+  const sidebarItems = [
+    { id: 'notes', icon: '📝', label: t('sidebar.notes') },
+    { id: 'todo', icon: '✓', label: t('sidebar.todo') },
+    { id: 'calendar', icon: '📅', label: t('sidebar.calendar') },
+    { id: 'canvas', icon: '🎨', label: t('sidebar.canvas') },
+  ];
+  
+  const bottomItems = [
+    { id: 'account', icon: '👤', label: t('sidebar.account') },
+    { id: 'settings', icon: '⚙️', label: t('sidebar.settings') },
+  ];
+
   return (
-    <div className="min-h-screen bg-black text-white">
-      {/* Sol kenar çubuğu - Minimal */}
-      <div className="fixed top-0 left-0 h-full w-14 bg-[#111111] z-10 flex flex-col items-center py-4">
-        {/* Hamburger menü ikonu */}
-        <button className="p-2 mb-6">
-          <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
+    <div className="flex min-h-screen bg-black text-white">
+      {/* Sidebar - İnce tasarım */}
+      <aside className="w-16 bg-zinc-900 border-r border-zinc-800 flex flex-col items-center py-4">
+        {/* Üst Kısım */}
+        <div className="flex flex-col items-center space-y-6">
+          {/* Hamburger Menü */}
+          <button className="text-gray-400 hover:text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+          
+          {/* Navigation İkonları */}
+          {sidebarItems.map((item) => (
+            <button key={item.id} className="text-gray-400 hover:text-white">
+              <span className="text-xl">{item.icon}</span>
+            </button>
+          ))}
+        </div>
         
-        {/* Dosya ikonu */}
-        <button className="p-2 mb-4">
-          <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-          </svg>
-        </button>
-        
-        {/* Klasör ikonu */}
-        <button className="p-2">
-          <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-          </svg>
-        </button>
-      </div>
-
-      {/* Ana içerik - Sol kenar çubuğu genişliği kadar margin bırakılıyor */}
-      <main className="ml-14">
-        <Outlet />
+        {/* Alt Kısım */}
+        <div className="flex flex-col items-center mt-auto space-y-6 mb-4">
+          {bottomItems.map((item) => (
+            <button key={item.id} className="text-gray-400 hover:text-white">
+              <span className="text-xl">{item.icon}</span>
+            </button>
+          ))}
+        </div>
+      </aside>
+      
+      {/* Ana içerik */}
+      <main className="flex-1 overflow-y-auto">
+        {children}
       </main>
+
+      {/* Ayarlar */}
+      <div className="fixed top-4 right-4">
+        <ThemeToggle />
+      </div>
     </div>
   );
 };

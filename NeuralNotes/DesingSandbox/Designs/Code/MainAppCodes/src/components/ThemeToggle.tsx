@@ -1,54 +1,63 @@
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import useTheme from '../hooks/useTheme';
 
 /**
  * Tema değiştirme butonu bileşeni
  * Karanlık/açık tema arasında geçiş yapmak için kullanılır
  */
-const ThemeToggle = () => {
-  const { toggleTheme, isDarkTheme } = useTheme();
-
+const ThemeToggle: React.FC = () => {
+  const { theme, toggleTheme } = useTheme();
+  const { t } = useTranslation();
+  
   return (
     <motion.button
-      onClick={toggleTheme}
-      className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-800 focus:outline-none"
-      whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
-      title={isDarkTheme ? 'Açık temaya geç' : 'Karanlık temaya geç'}
-      aria-label={isDarkTheme ? 'Açık temaya geç' : 'Karanlık temaya geç'}
+      onClick={toggleTheme}
+      className="flex items-center justify-center p-2 rounded-lg hover:bg-[rgb(var(--card-bg))] transition-colors"
+      aria-label={t(`theme.${theme === 'light' ? 'dark' : 'light'}`)}
+      title={t(`theme.${theme === 'light' ? 'dark' : 'light'}`)}
     >
-      {isDarkTheme ? (
-        // Güneş ikonu (açık tema)
-        <svg 
-          className="w-4 h-4 text-yellow-400" 
-          fill="none"
-          stroke="currentColor" 
+      {theme === 'light' ? (
+        <motion.svg 
+          xmlns="http://www.w3.org/2000/svg" 
           viewBox="0 0 24 24" 
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path 
-            strokeLinecap="round" 
-            strokeLinejoin="round" 
-            strokeWidth={2} 
-            d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" 
-          />
-        </svg>
-      ) : (
-        // Ay ikonu (karanlık tema)
-        <svg 
-          className="w-4 h-4 text-gray-400" 
           fill="none" 
           stroke="currentColor" 
-          viewBox="0 0 24 24" 
-          xmlns="http://www.w3.org/2000/svg"
+          strokeWidth="2" 
+          strokeLinecap="round" 
+          strokeLinejoin="round" 
+          className="w-5 h-5"
+          initial={{ rotate: -45 }}
+          animate={{ rotate: 0 }}
+          transition={{ duration: 0.3 }}
         >
-          <path 
-            strokeLinecap="round" 
-            strokeLinejoin="round" 
-            strokeWidth={2} 
-            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" 
-          />
-        </svg>
+          <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446A9 9 0 1 1 12 2.992z" />
+        </motion.svg>
+      ) : (
+        <motion.svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          viewBox="0 0 24 24" 
+          fill="none" 
+          stroke="currentColor" 
+          strokeWidth="2" 
+          strokeLinecap="round" 
+          strokeLinejoin="round" 
+          className="w-5 h-5"
+          initial={{ rotate: 45 }}
+          animate={{ rotate: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <circle cx="12" cy="12" r="4" />
+          <path d="M12 2v2" />
+          <path d="M12 20v2" />
+          <path d="m4.93 4.93 1.41 1.41" />
+          <path d="m17.66 17.66 1.41 1.41" />
+          <path d="M2 12h2" />
+          <path d="M20 12h2" />
+          <path d="m6.34 17.66-1.41 1.41" />
+          <path d="m19.07 4.93-1.41 1.41" />
+        </motion.svg>
       )}
     </motion.button>
   );

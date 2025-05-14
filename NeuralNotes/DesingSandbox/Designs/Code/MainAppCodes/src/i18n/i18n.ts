@@ -1,41 +1,36 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import { DEFAULT_LANGUAGE, LANGUAGE_STORAGE_KEY, LANGUAGES } from '../config/constants';
+// Language detector hata veriyor, şimdilik kaldırılıyor
 
 // Çeviri dosyalarını içe aktar
 import enTranslation from './en.json';
 import trTranslation from './tr.json';
 
-// Kaydedilmiş dil tercihini al veya varsayılan dili kullan
-const savedLanguage = localStorage.getItem(LANGUAGE_STORAGE_KEY) || DEFAULT_LANGUAGE;
-
-// i18next yapılandırması
+// Configure i18next
 i18n
-  .use(initReactI18next)
+  .use(initReactI18next) // passes i18n down to react-i18next
   .init({
     resources: {
-      [LANGUAGES.EN]: {
-        translation: enTranslation
+      en: {
+        translation: enTranslation,
       },
-      [LANGUAGES.TR]: {
-        translation: trTranslation
-      }
+      tr: {
+        translation: trTranslation,
+      },
     },
-    lng: savedLanguage,
-    fallbackLng: DEFAULT_LANGUAGE,
+    lng: localStorage.getItem('language') || 'en', // default language
+    fallbackLng: 'en',
     interpolation: {
-      escapeValue: false // React zaten XSS'e karşı güvenlidir
+      escapeValue: false, // react already safes from xss
     },
     react: {
-      useSuspense: true // Suspense ile i18next kullanımı
+      useSuspense: true,
     },
-    // Eksik çevirileri konsola log etme (geliştirme ortamında)
-    debug: process.env.NODE_ENV === 'development'
   });
 
 // Dil değiştiğinde localStorage'a kaydet
 i18n.on('languageChanged', (lng) => {
-  localStorage.setItem(LANGUAGE_STORAGE_KEY, lng);
+  localStorage.setItem('language', lng);
   // HTML lang attribute güncelleme
   document.documentElement.lang = lng;
 });

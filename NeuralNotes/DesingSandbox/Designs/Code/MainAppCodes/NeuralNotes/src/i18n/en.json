@@ -1,0 +1,21 @@
+{
+    "translation": {
+        "welcomeMessage": "Welcome to NeuralNotes",
+        "sampleNote": {
+            "title": "Sample Note Title",
+            "content": "This is the content of a sample note."
+        },
+        "anotherNote": {
+            "title": "Another Note",
+            "content": "This is a short content for another note."
+        },
+        "importantMeeting": {
+            "title": "Important Meeting",
+            "content": "Preparations for tomorrow's meeting are complete."
+        },
+        "homePage": {
+            "myNotes": "My Notes",
+            "noNotes": "You don't have any notes yet."
+        }
+    }
+}

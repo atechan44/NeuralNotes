@@ -1,7 +1,7 @@
 {
     "app": {
         "name": "NeuralNotes",
-        "tagline": "Modern, yapay zeka destekli not alma uygulaması",
+        "tagline": "Akıllı Not Alma",
         "searchTitle": "Size nasıl yardımcı olabilirim?"
     },
     "common": {
@@ -22,7 +22,15 @@
     "sidebar": {
         "home": "Ana Sayfa",
         "newNote": "Yeni Not",
-        "settings": "Ayarlar"
+        "settings": "Ayarlar",
+        "notes": "Notlar",
+        "favorites": "Favoriler",
+        "shared": "Paylaşılanlar",
+        "trash": "Çöp Kutusu",
+        "account": "Hesap",
+        "calendar": "Takvim",
+        "todo": "Yapılacaklar",
+        "canvas": "Tuval"
     },
     "theme": {
         "light": "Açık Tema",
@@ -41,7 +49,7 @@
         "searchNotes": "Notlarda ara...",
         "askAnything": "Herhangi bir şey sorun",
         "tags": "Etiketler",
-        "addTag": "Etiket ekle",
+        "addTag": "Etiket Ekle",
         "summary": "Özet",
         "generateSummary": "Özet Oluştur",
         "insights": "İçgörüler",
@@ -62,7 +70,10 @@
             "confirm": "Bu notu silmek istediğinizden emin misiniz?",
             "warning": "Bu işlem geri alınamaz.",
             "success": "Not başarıyla silindi"
-        }
+        },
+        "placeholderTitle": "Not Başlığı",
+        "placeholderContent": "Düşüncelerinizi yazın...",
+        "noNotes": "Henüz not yok. İlk notunuzu oluşturun!"
     },
     "tags": {
         "title": "Etiketler",
@@ -96,5 +107,12 @@
         "maxLength": "En fazla {{count}} karakter olmalıdır",
         "passwordMismatch": "Şifreler eşleşmiyor",
         "unknown": "Bilinmeyen bir hata oluştu"
+    },
+    "ai": {
+        "summarize": "Özetle",
+        "insights": "İçgörü Oluştur",
+        "conceptMap": "Kavram Haritası Göster",
+        "extractKeywords": "Anahtar Kelimeleri Çıkar",
+        "generateQuestions": "Soru Oluştur"
     }
 }

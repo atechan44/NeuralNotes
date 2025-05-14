@@ -1,0 +1,21 @@
+{
+    "translation": {
+        "welcomeMessage": "NeuralNotes'a Hoş Geldiniz",
+        "sampleNote": {
+            "title": "Örnek Not Başlığı",
+            "content": "Bu, örnek bir notun içeriğidir."
+        },
+        "anotherNote": {
+            "title": "Diğer Not",
+            "content": "Bu da başka bir notun kısa içeriği."
+        },
+        "importantMeeting": {
+            "title": "Önemli Toplantı",
+            "content": "Yarınki toplantı için hazırlıklar tamamlandı."
+        },
+        "homePage": {
+            "myNotes": "Notlarım",
+            "noNotes": "Henüz hiç notunuz yok."
+        }
+    }
+}
