@@ -1,24 +1,39 @@
-### NeuralNotes
-## AI-Asistanlı Not Alma Platformu
+**NeuralNotes**
+*AI-Assisted Note-Taking Platform*
 
-### Hakkında
-Notlarınızdan öğrenen, kişiselleştirilmiş öneriler sunan ve beyin fırtınasına yardımcı olan AI asistanlı bir not alma platformu
+---
 
-### Genel Bakış
-Notlarınızdan yapay zekaya size özel sınav hazırlaması, yeni yaratıcı fikirler sunması, öğrenme içeriklerini özetlemesi, bilgi boşluklarını tespit etmesi ve kişisel gelişim yolculuğunuzu takip etmesi için AI destekli bir platform.
-Basit samimi tasarımıyla ve güçlü  yapay zekasıyla rakiplerinden ayrılan bir platform!
+### **About**
 
-Indie tarzında gereksinim analizimiz:
-[NeuralNotes Gereksinim Analizi.pdf](https://github.com/user-attachments/files/20024278/NeuralNotes.Gereksinim.Analizi.pdf)
+An AI-powered note-taking platform that learns from your notes, offers personalized suggestions, and assists with brainstorming.
 
-### Geliştirme Aşamaları
-**Aşama 1:** Kişiselleştirilmiş yanıtlar için özenle hazırlanmış komutlar kullanarak harici yapay zekâ API'leriyle entegrasyon
+---
 
-**Aşama 2:** Daha derin kişiselleştirme için güçlü açık kaynak modellerinin uygulanması
+### **Overview**
 
-### Temel Özellikler
-🧠 Düşünce kalıplarınıza uyum sağlayan kişiselleştirilmiş yapay zekâ asistanı
+A smart note-taking tool powered by AI that prepares customized quizzes based on your notes, offers creative new ideas, summarizes learning content, detects knowledge gaps, and tracks your personal development journey. With its simple and friendly design, paired with a powerful AI engine, it stands out from the competition!
 
-💡 Mevcut notlarınıza dayalı yaratıcı fikir üretimi
+You can find our indie-style requirements analysis here: [NeuralNotes Requirements Analysis.pdf](https://github.com/user-attachments/files/20109807/NeuralNotes.Requirements.Analysis.pdf)
 
-🎯 Yapışkan not estetiğine sahip basit, akılda kalıcı kullanıcı arayüzü
+
+---
+
+### **Development Stages**
+
+**Stage 1:** Integration with external AI APIs using carefully crafted prompts for personalized responses.
+
+**Stage 2:** Implementation of powerful open-source models for deeper personalization.
+
+---
+
+### **Core Features**
+
+🧠 A personalized AI assistant that adapts to your thinking patterns
+
+💡 Creative idea generation based on your existing notes
+
+🎯 A simple, memorable user interface with sticky note aesthetics
+
+---
+
+

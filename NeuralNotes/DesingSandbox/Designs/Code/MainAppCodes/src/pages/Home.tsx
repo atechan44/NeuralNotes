@@ -1,10 +1,11 @@
-/**
- * Boş ana sayfa bileşeni
- */
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import NoteCard from '../components/NoteCard';
+
+/**
+ * Ana sayfa bileşeni
+ */
 
 // Example notes for demonstration
 const EXAMPLE_NOTES = [
@@ -82,33 +83,36 @@ const container = {
 
 const Home: React.FC = () => {
   const { t } = useTranslation();
+  const [searchQuery, setSearchQuery] = useState('');
   
   return (
     <div className="p-6">
       {/* Arama ve Başlık Alanı */}
-      <div className="max-w-4xl mx-auto mb-12 mt-12 text-center">
-        <h1 className="text-4xl font-bold mb-5">What can I help with?</h1>
+      <div className="max-w-4xl mx-auto mb-12 mt-8 md:mt-12 text-center">
+        <h1 className="text-3xl md:text-4xl font-bold mb-5">{t('app.searchTitle', 'What can I help with?')}</h1>
         
         {/* Arama Çubuğu */}
         <div className="relative max-w-md mx-auto">
           <input 
             type="text" 
-            placeholder="Ask anything" 
-            className="w-full py-3 px-4 pl-5 rounded-full bg-gray-100 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder={t('common.search', 'Ask anything')}
+            className="w-full py-3 px-4 pl-5 rounded-full bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors duration-200"
           />
-          <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-neutral-400 dark:text-neutral-500">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
           </div>
         </div>
         
         {/* Filtreler */}
-        <div className="flex justify-center gap-2 mt-5">
-          <button className="px-4 py-1.5 bg-gray-200 text-gray-800 dark:bg-zinc-800 dark:text-gray-200 rounded-full text-sm transition-colors duration-200">All</button>
-          <button className="px-4 py-1.5 bg-gray-300 text-gray-800 dark:bg-zinc-900 dark:text-gray-200 rounded-full text-sm transition-colors duration-200">Myself</button>
-          <button className="px-4 py-1.5 bg-gray-300 text-gray-800 dark:bg-zinc-900 dark:text-gray-200 rounded-full text-sm transition-colors duration-200">⭐ Starred</button>
-          <button className="px-4 py-1.5 bg-gray-300 text-gray-800 dark:bg-zinc-900 dark:text-gray-200 rounded-full text-sm transition-colors duration-200">🏷️ Tags</button>
+        <div className="flex flex-wrap justify-center gap-2 mt-5">
+          <button className="px-4 py-1.5 bg-neutral-200 text-neutral-800 dark:bg-neutral-700 dark:text-neutral-200 rounded-full text-sm hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-colors duration-200">All</button>
+          <button className="px-4 py-1.5 bg-neutral-100 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300 rounded-full text-sm hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors duration-200">Myself</button>
+          <button className="px-4 py-1.5 bg-neutral-100 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300 rounded-full text-sm hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors duration-200">⭐ Starred</button>
+          <button className="px-4 py-1.5 bg-neutral-100 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300 rounded-full text-sm hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors duration-200">🏷️ Tags</button>
         </div>
       </div>
       
@@ -122,6 +126,7 @@ const Home: React.FC = () => {
         {EXAMPLE_NOTES.map((note) => (
           <motion.div key={note.id} layout>
             <NoteCard
+              id={note.id}
               title={note.title}
               content={note.content}
               date={note.date}
@@ -142,6 +147,7 @@ const Home: React.FC = () => {
         {MORE_NOTES.map((note) => (
           <motion.div key={note.id} layout>
             <NoteCard
+              id={note.id}
               title={note.title}
               content={note.content}
               date={note.date}
