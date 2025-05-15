@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
  * Not kartı özellikleri
  */
 interface NoteCardProps {
+  id?: string;
   title: string;
   content: string;
   date: string;
@@ -17,6 +18,7 @@ interface NoteCardProps {
  * Basit not kartı bileşeni
  */
 const NoteCard: React.FC<NoteCardProps> = ({
+  id,
   title,
   content,
   date,
