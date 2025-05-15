@@ -24,15 +24,26 @@ function App() {
       
       // Only update if user hasn't explicitly set a theme preference
       if (!currentTheme) {
-        document.documentElement.classList.remove('light', 'dark');
-        document.documentElement.classList.add(prefersDark ? 'dark' : 'light');
+        if (prefersDark) {
+          document.documentElement.classList.add('dark');
+          document.documentElement.classList.remove('light');
+        } else {
+          document.documentElement.classList.add('light');
+          document.documentElement.classList.remove('dark');
+        }
       }
     };
     
     // Initial check (in case useEffect runs after theme is already set)
     if (!localStorage.getItem('theme')) {
       const prefersDark = mediaQuery.matches;
-      document.documentElement.classList.add(prefersDark ? 'dark' : 'light');
+      if (prefersDark) {
+        document.documentElement.classList.add('dark');
+        document.documentElement.classList.remove('light');
+      } else {
+        document.documentElement.classList.add('light');
+        document.documentElement.classList.remove('dark');
+      }
     }
     
     // Add listener for changes

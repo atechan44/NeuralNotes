@@ -94,7 +94,7 @@ const Home: React.FC = () => {
           <input 
             type="text" 
             placeholder="Ask anything" 
-            className="w-full py-3 px-4 pl-5 rounded-full bg-zinc-800 border border-zinc-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full py-3 px-4 pl-5 rounded-full bg-gray-100 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
           />
           <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -105,10 +105,10 @@ const Home: React.FC = () => {
         
         {/* Filtreler */}
         <div className="flex justify-center gap-2 mt-5">
-          <button className="px-4 py-1.5 bg-zinc-800 rounded-full text-sm">All</button>
-          <button className="px-4 py-1.5 bg-zinc-900 rounded-full text-sm">Myself</button>
-          <button className="px-4 py-1.5 bg-zinc-900 rounded-full text-sm">⭐ Starred</button>
-          <button className="px-4 py-1.5 bg-zinc-900 rounded-full text-sm">🏷️ Tags</button>
+          <button className="px-4 py-1.5 bg-gray-200 text-gray-800 dark:bg-zinc-800 dark:text-gray-200 rounded-full text-sm transition-colors duration-200">All</button>
+          <button className="px-4 py-1.5 bg-gray-300 text-gray-800 dark:bg-zinc-900 dark:text-gray-200 rounded-full text-sm transition-colors duration-200">Myself</button>
+          <button className="px-4 py-1.5 bg-gray-300 text-gray-800 dark:bg-zinc-900 dark:text-gray-200 rounded-full text-sm transition-colors duration-200">⭐ Starred</button>
+          <button className="px-4 py-1.5 bg-gray-300 text-gray-800 dark:bg-zinc-900 dark:text-gray-200 rounded-full text-sm transition-colors duration-200">🏷️ Tags</button>
         </div>
       </div>
       

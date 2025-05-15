@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next';
 import useTheme from '../hooks/useTheme';
 
 /**
- * Tema değiştirme butonu bileşeni
- * Karanlık/açık tema arasında geçiş yapmak için kullanılır
+ * Theme toggle button component
+ * Used to switch between dark/light themes
  */
 const ThemeToggle: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
@@ -14,7 +14,7 @@ const ThemeToggle: React.FC = () => {
     <motion.button
       whileTap={{ scale: 0.95 }}
       onClick={toggleTheme}
-      className="flex items-center justify-center p-2 rounded-lg hover:bg-[rgb(var(--card-bg))] transition-colors"
+      className="flex items-center justify-center p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-zinc-700 transition-colors"
       aria-label={t(`theme.${theme === 'light' ? 'dark' : 'light'}`)}
       title={t(`theme.${theme === 'light' ? 'dark' : 'light'}`)}
     >
