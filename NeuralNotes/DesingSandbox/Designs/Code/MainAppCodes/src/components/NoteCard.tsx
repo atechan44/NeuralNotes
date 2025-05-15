@@ -1,48 +1,74 @@
+import React from 'react';
 import { motion } from 'framer-motion';
-import { useRef } from 'react';
-import { APP_NAME } from '../config/constants';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Not kartı özellikleri
  */
 interface NoteCardProps {
+  id?: string;
   title: string;
   content: string;
   date: string;
-  thumbnail?: string;
+  tags?: string[];
+  onClick?: () => void;
 }
 
 /**
  * Basit not kartı bileşeni
  */
-const NoteCard = ({ title, content, date, thumbnail }: NoteCardProps) => {
+const NoteCard: React.FC<NoteCardProps> = ({
+  id,
+  title,
+  content,
+  date,
+  tags = [],
+  onClick,
+}) => {
+  const { t } = useTranslation();
+  
   return (
-    <div className="bg-gray-800 rounded-lg overflow-hidden border border-gray-700 flex flex-col h-full">
-      {thumbnail && (
-        <div className="w-full h-32 overflow-hidden">
-          <img 
-            src={thumbnail} 
-            alt={title}
-            className="w-full h-full object-cover"
-          />
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      whileHover={{ y: -5 }}
+      transition={{
+        layout: { type: 'spring', stiffness: 300, damping: 30 },
+        y: { type: 'spring', stiffness: 300, damping: 25 }
+      }}
+      onClick={onClick}
+      className="bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg p-4 cursor-pointer flex flex-col min-h-[160px] max-w-full relative transition-colors duration-200"
+    >
+      {/* Favori Yıldızı */}
+      <div className="absolute top-3 right-3">
+        <button className="text-yellow-500 hover:text-yellow-300">
+          ★
+        </button>
+      </div>
+      
+      <h3 className="text-lg font-semibold mb-2 pr-6 line-clamp-1">{title}</h3>
+      <p className="text-sm text-gray-800 dark:text-gray-300 flex-grow mb-3 line-clamp-3 transition-colors duration-200">{content}</p>
+      
+      {tags.length > 0 && (
+        <div className="flex flex-wrap gap-1 mb-3">
+          {tags.map((tag) => (
+            <span 
+              key={tag} 
+              className="text-xs px-2 py-0.5 rounded-full bg-gray-100 dark:bg-zinc-700 text-gray-600 dark:text-gray-300 transition-colors duration-200"
+            >
+              {tag}
+            </span>
+          ))}
         </div>
       )}
       
-      <div className="p-4 flex-grow">
-        <h3 className="text-base font-medium text-white mb-1">
-          {title}
-        </h3>
-        
-        <p className="text-gray-300 text-xs mb-3 line-clamp-3">
-          {content}
-        </p>
-        
-        <span className="text-xs text-gray-400">
-          {date}
-        </span>
+      <div className="text-xs text-gray-500 dark:text-gray-400 mt-auto transition-colors duration-200">
+        {date}
       </div>
-    </div>
+    </motion.div>
   );
 };
 
-export default NoteCard;
+export default React.memo(NoteCard);

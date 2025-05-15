@@ -1,7 +1,7 @@
 {
     "app": {
         "name": "NeuralNotes",
-        "tagline": "Modern, AI-powered note-taking application",
+        "tagline": "Intelligent Note-Taking",
         "searchTitle": "What can I help with?"
     },
     "common": {
@@ -22,7 +22,15 @@
     "sidebar": {
         "home": "Home",
         "newNote": "New Note",
-        "settings": "Settings"
+        "settings": "Settings",
+        "notes": "Notes",
+        "favorites": "Favorites",
+        "shared": "Shared",
+        "trash": "Trash",
+        "account": "Account",
+        "calendar": "Calendar",
+        "todo": "To Do",
+        "canvas": "Canvas"
     },
     "theme": {
         "light": "Light Mode",
@@ -41,7 +49,7 @@
         "searchNotes": "Search notes...",
         "askAnything": "Ask anything",
         "tags": "Tags",
-        "addTag": "Add tag",
+        "addTag": "Add Tag",
         "summary": "Summary",
         "generateSummary": "Generate Summary",
         "insights": "Insights",
@@ -62,7 +70,9 @@
             "confirm": "Are you sure you want to delete this note?",
             "warning": "This action cannot be undone.",
             "success": "Note deleted successfully"
-        }
+        },
+        "placeholderTitle": "Note Title",
+        "placeholderContent": "Write your thoughts..."
     },
     "tags": {
         "title": "Tags",
@@ -96,5 +106,12 @@
         "maxLength": "Must be at most {{count}} characters",
         "passwordMismatch": "Passwords do not match",
         "unknown": "An unknown error occurred"
+    },
+    "ai": {
+        "summarize": "Summarize",
+        "insights": "Generate Insights",
+        "conceptMap": "Show Concept Map",
+        "extractKeywords": "Extract Keywords",
+        "generateQuestions": "Generate Questions"
     }
 }
