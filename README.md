@@ -9,6 +9,8 @@ An AI-powered note-taking platform that learns from your notes, offers personali
 
 ---
 
+![MVP_dashboard](https://github.com/user-attachments/assets/eae8c893-72b9-4066-b60d-87308891421c)
+
 ### **Overview**
 
 A smart note-taking tool powered by AI that prepares customized quizzes based on your notes, offers creative new ideas, summarizes learning content, detects knowledge gaps, and tracks your personal development journey. With its simple and friendly design, paired with a powerful AI engine, it stands out from the competition!
