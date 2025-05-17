@@ -1,6 +1,7 @@
 **NeuralNotes**
 *AI-Assisted Note-Taking Platform*
 
+![MVP_dashboard](https://github.com/user-attachments/assets/eae8c893-72b9-4066-b60d-87308891421c)
 ---
 
 ### **About**
@@ -8,8 +9,6 @@
 An AI-powered note-taking platform that learns from your notes, offers personalized suggestions, and assists with brainstorming.
 
 ---
-
-![MVP_dashboard](https://github.com/user-attachments/assets/eae8c893-72b9-4066-b60d-87308891421c)
 
 ### **Overview**
 
