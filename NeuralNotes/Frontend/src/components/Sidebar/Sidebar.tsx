@@ -1,121 +1,222 @@
+import React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
+import {
+  Settings,
+  ChevronDown,
+  X as IconX,
+  LogOut,
+  CalendarDays,
+  Folder,
+  FolderOpen,
+  MessageSquare,
+  Brush,
+  type LucideIcon,
+} from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 
-/**
- * Sidebar component for navigation
- * Matching the design from the screenshot
- */
-const Sidebar = () => {
+// Navigasyon öğesi için arayüz
+interface NavItem {
+  id: string;
+  label: string;
+  icon: LucideIcon;
+  path?: string;
+  children?: NavItem[];
+}
+
+interface SidebarProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
+  const { t } = useTranslation();
+
+  // Orijinal sıra ve çevirilerle geri dönelim
+  const exampleSubFolders: NavItem[] = [
+    { id: 'journal', label: t('sidebar.folders.journal', 'Journal'), icon: Folder, path: '/folders/journal' },
+    { id: 'archive', label: t('sidebar.folders.archive', 'Archive'), icon: Folder, path: '/folders/archive' },
+    { id: 'work', label: t('sidebar.folders.work', 'Work Projects'), icon: Folder, path: '/folders/work' },
+  ];
+
+  const navItems: NavItem[] = [
+    {
+      id: 'folders',
+      label: t('sidebar.folders', 'Folders'),
+      icon: Folder,
+      children: exampleSubFolders,
+    },
+    { id: 'calendar', label: t('sidebar.calendar', 'Calendar'), icon: CalendarDays, path: '/calendar', children: [] },
+    { id: 'canvas', label: t('sidebar.canvas', 'Canvas'), icon: Brush, path: '/canvas', children: [] },
+    { id: 'recentChats', label: t('sidebar.recentChats', 'Recent Chats'), icon: MessageSquare, path: '/recent-chats', children: [] },
+  ];
+
+  const bottomNavItems: NavItem[] = [
+    { id: 'settings', label: t('sidebar.settings', 'Settings'), icon: Settings, path: '/settings' },
+    { id: 'logout', label: t('sidebar.logout', 'Logout'), icon: LogOut, path: '/logout' },
+  ];
+
+  const [openSections, setOpenSections] = React.useState<Record<string, boolean>>({});
+
+  const toggleSection = (id: string) => {
+    setOpenSections(prev => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const sidebarVariants = {
+    open: { x: 0, width: '280px', transition: { type: "tween", duration: 0.3, ease: "easeOut" } },
+    closed: { x: '-100%', width: '280px', transition: { type: "tween", duration: 0.25, ease: "easeIn" } },
+  };
+
+  const itemVariants = {
+    open: { opacity: 1, x: 0, transition: { type: "tween", duration: 0.2, ease: "easeOut", delay: 0.15 } },
+    closed: { opacity: 0, x: 0, transition: { duration: 0 } },
+  };
+
+  const getNavLinkClasses = ({ isActive }: { isActive: boolean }) =>
+    `flex items-center p-3 rounded-lg transition-colors duration-150 group text-base font-medium w-full ${
+      isActive
+        ? 'bg-[rgb(var(--primary-rgb))] text-white'
+        : 'hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300'
+    }`;
+
+  const getNavIconClasses = ({ isActive }: { isActive: boolean }) =>
+    `mr-4 shrink-0 ${
+      isActive
+        ? 'text-white'
+        : 'text-neutral-500 dark:text-neutral-400 group-hover:text-[rgb(var(--primary-rgb))] dark:group-hover:text-[rgb(var(--primary-rgb))] transition-colors duration-150'
+    }`;
+
   return (
-    <div className="h-screen fixed top-0 left-0 bg-[#111] border-r border-[#222] z-20 w-[80px]">
-      {/* Menu button at top */}
-      <div className="flex items-center justify-center h-16 border-b border-[#222]">
-        <button className="p-2">
-          <svg className="w-6 h-6 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
-      </div>
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          <motion.div
+            className="fixed inset-0 z-30 bg-black/40 dark:bg-black/60 md:hidden backdrop-blur-sm"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { delay: 0.2, duration: 0.2 } }}
+            onClick={onClose}
+          />
+          <motion.aside
+            key="sidebar"
+            variants={sidebarVariants}
+            initial="closed"
+            animate="open"
+            exit="closed"
+            className="fixed top-0 left-0 h-full z-40 bg-white dark:bg-neutral-900/90 border-r border-neutral-200/70 dark:border-neutral-700/60 shadow-xl flex flex-col"
+          >
+            <motion.div variants={itemVariants} className="p-4 pr-3 border-b border-neutral-200/70 dark:border-neutral-700/60 flex justify-between items-center">
+              <h2 className="text-lg font-semibold text-neutral-800 dark:text-neutral-100">{t('app.name', 'NeuralNotes')}</h2>
+              <button
+                onClick={onClose}
+                className="p-1.5 rounded-md text-neutral-500 dark:text-neutral-400 hover:bg-neutral-200 dark:hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[rgb(var(--primary-rgb))] transition-colors duration-150"
+                aria-label={t('sidebar.close', 'Close sidebar')}
+                title={t('sidebar.close', 'Close sidebar')}
+              >
+                <IconX size={20} />
+              </button>
+            </motion.div>
 
-      {/* Main Navigation Items */}
-      <nav className="mt-4 flex flex-col space-y-6">
-        {/* Home */}
-        <NavLink 
-          to="/" 
-          className={({ isActive }) => 
-            `flex flex-col items-center py-2 px-2 ${isActive ? 'text-white' : 'text-gray-400 hover:text-gray-300'}`
-          }
-          end
-        >
-          <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-          </svg>
-          <span className="text-xs mt-1">Home</span>
-        </NavLink>
-        
-        {/* Notes */}
-        <NavLink 
-          to="/notes" 
-          className={({ isActive }) => 
-            `flex flex-col items-center py-2 px-2 ${isActive ? 'text-white' : 'text-gray-400 hover:text-gray-300'}`
-          }
-        >
-          <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-          </svg>
-          <span className="text-xs mt-1">Notes</span>
-        </NavLink>
+            <motion.nav variants={itemVariants} className="flex-1 p-3 space-y-1 overflow-y-auto">
+              {navItems.map((item) => {
+                const ItemIcon = item.id === 'folders' ? (openSections[item.id] ? FolderOpen : Folder) : item.icon;
 
-        {/* Canvas */}
-        <NavLink 
-          to="/canvas" 
-          className={({ isActive }) => 
-            `flex flex-col items-center py-2 px-2 ${isActive ? 'text-yellow-500' : 'text-gray-400 hover:text-gray-300'}`
-          }
-        >
-          <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
-          <span className="text-xs mt-1">Canvas</span>
-        </NavLink>
+                return item.children && item.children.length > 0 ? (
+                  <motion.div key={item.id} variants={itemVariants} className="w-full">
+                    <button
+                      onClick={() => toggleSection(item.id)}
+                      className="flex items-center p-3 rounded-lg transition-colors duration-150 group text-base font-medium w-full hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300"
+                    >
+                      <ItemIcon size={20} className="mr-4 shrink-0 text-neutral-500 dark:text-neutral-400 group-hover:text-[rgb(var(--primary-rgb))] dark:group-hover:text-[rgb(var(--primary-rgb))] transition-colors duration-150" />
+                      <span className="flex-1 truncate text-left">{item.label}</span>
+                      <ChevronDown size={18} className={`transition-transform duration-200 ${openSections[item.id] ? '' : '-rotate-90'}`} />
+                    </button>
+                    {openSections[item.id] && (
+                      <motion.div
+                        layout
+                        className="ml-[20px] mt-1 space-y-0.5 border-l-2 border-neutral-300/70 dark:border-neutral-600/70 pl-[18px]"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2, ease: "easeInOut" }}
+                      >
+                        {item.children.map(child => {
+                          console.log('Rendering NavLink child:', child);
+                          return (
+                            <NavLink
+                              key={child.id}
+                              to={child.path || "/"}
+                              onClick={onClose}
+                              className="flex items-center p-2 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 transition-colors duration-150"
+                              style={({ isActive }) => ({ 
+                                backgroundColor: isActive ? 'rgba(var(--primary-rgb), 0.1)' : 'transparent',
+                                color: isActive ? 'rgb(var(--primary-rgb))' : 'inherit',
+                                fontWeight: isActive ? '600' : 'normal'
+                              })}
+                            >
+                              <child.icon size={16} className="mr-3 shrink-0 text-neutral-500 dark:text-neutral-400" />
+                              <span className="truncate">{child.label}</span>
+                            </NavLink>
+                          );
+                        })}
+                      </motion.div>
+                    )}
+                  </motion.div>
+                ) : (
+                  <NavLink
+                    key={item.id}
+                    to={item.path || "/"}
+                    onClick={onClose}
+                    className={`flex items-center p-3 rounded-lg transition-colors duration-150 group text-base font-medium w-full`}
+                     style={({ isActive }) => ({ 
+                        backgroundColor: isActive ? 'rgb(var(--primary-rgb))' : 'transparent',
+                        color: isActive ? 'white' : 'inherit',
+                      })}
+                  >
+                    <ItemIcon size={20} 
+                      className={`mr-4 shrink-0 ${true ? 'text-white' : 'text-neutral-500 dark:text-neutral-400 group-hover:text-[rgb(var(--primary-rgb))] dark:group-hover:text-[rgb(var(--primary-rgb))] transition-colors duration-150'}`} />
+                    <span className="flex-1 truncate">{item.label}</span>
+                  </NavLink>
+                );
+              })}
+            </motion.nav>
 
-        {/* To-Do */}
-        <NavLink 
-          to="/todo" 
-          className={({ isActive }) => 
-            `flex flex-col items-center py-2 px-2 ${isActive ? 'text-white' : 'text-gray-400 hover:text-gray-300'}`
-          }
-        >
-          <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-          </svg>
-          <span className="text-xs mt-1">To-Do</span>
-        </NavLink>
-
-        {/* Calendar */}
-        <NavLink 
-          to="/calendar" 
-          className={({ isActive }) => 
-            `flex flex-col items-center py-2 px-2 ${isActive ? 'text-white' : 'text-gray-400 hover:text-gray-300'}`
-          }
-        >
-          <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
-          <span className="text-xs mt-1">Calendar</span>
-        </NavLink>
-      </nav>
-
-      {/* Bottom menu items */}
-      <div className="absolute bottom-6 w-full flex flex-col space-y-6">
-        {/* Account */}
-        <NavLink 
-          to="/account" 
-          className={({ isActive }) => 
-            `flex flex-col items-center py-2 px-2 ${isActive ? 'text-white' : 'text-gray-400 hover:text-gray-300'}`
-          }
-        >
-          <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-          </svg>
-          <span className="text-xs mt-1">Account</span>
-        </NavLink>
-        
-        {/* Settings */}
-        <NavLink 
-          to="/settings" 
-          className={({ isActive }) => 
-            `flex flex-col items-center py-2 px-2 ${isActive ? 'text-white' : 'text-gray-400 hover:text-gray-300'}`
-          }
-        >
-          <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-          </svg>
-          <span className="text-xs mt-1">Settings</span>
-        </NavLink>
-      </div>
-    </div>
+            <motion.div variants={itemVariants} className="p-3 border-t border-neutral-200/70 dark:border-neutral-700/60 space-y-1">
+              {bottomNavItems.map((item) => (
+                item.id === 'logout' ? (
+                  <button
+                    key={item.id}
+                    onClick={() => {
+                      console.log('Logout clicked');
+                      onClose();
+                    }}
+                    className="flex items-center p-3 rounded-lg transition-colors duration-150 group text-base font-medium w-full hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300"
+                  >
+                     <item.icon size={20} className="mr-4 shrink-0 text-neutral-500 dark:text-neutral-400 group-hover:text-[rgb(var(--primary-rgb))] dark:group-hover:text-[rgb(var(--primary-rgb))] transition-colors duration-150" />
+                    <span className="flex-1 truncate text-left">{item.label}</span>
+                  </button>
+                ) : (
+                  <NavLink
+                    key={item.id}
+                    to={item.path || "/"}
+                    onClick={onClose}
+                    className={`flex items-center p-3 rounded-lg transition-colors duration-150 group text-base font-medium w-full`}
+                     style={({ isActive }) => ({ 
+                        backgroundColor: isActive ? 'rgb(var(--primary-rgb))' : 'transparent',
+                        color: isActive ? 'white' : 'inherit',
+                      })}
+                  >
+                    <item.icon size={20} className={`mr-4 shrink-0 ${true ? 'text-white' : 'text-neutral-500 dark:text-neutral-400 group-hover:text-[rgb(var(--primary-rgb))] dark:group-hover:text-[rgb(var(--primary-rgb))] transition-colors duration-150'}`} />
+                    <span className="flex-1 truncate">{item.label}</span>
+                  </NavLink>
+                )
+              ))}
+            </motion.div>
+          </motion.aside>
+        </>
+      )}
+    </AnimatePresence>
   );
 };
 
-export default Sidebar;
+export default React.memo(Sidebar);

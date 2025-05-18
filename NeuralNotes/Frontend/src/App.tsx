@@ -4,6 +4,9 @@ import { useTranslation } from 'react-i18next';
 import './styles/globals.css';
 import Home from './pages/Home';
 import MainLayout from './layouts/MainLayout';
+import SettingsPage from './pages/SettingsPage';
+import FolderNotesPage from './pages/FolderNotesPage';
+import NewNotePage from './pages/NewNotePage';
 
 // Import i18n
 import './i18n/i18n';
@@ -15,7 +18,6 @@ const TodoPage = () => <div className="p-8"><h1 className="text-3xl font-bold mb
 const CanvasPage = () => <div className="p-8"><h1 className="text-3xl font-bold mb-4">Canvas Page</h1><p>This is a placeholder for the Canvas page.</p></div>;
 const CalendarPage = () => <div className="p-8"><h1 className="text-3xl font-bold mb-4">Calendar Page</h1><p>This is a placeholder for the Calendar page.</p></div>;
 const AccountPage = () => <div className="p-8"><h1 className="text-3xl font-bold mb-4">Account Page</h1><p>This is a placeholder for the Account page.</p></div>;
-const SettingsPage = () => <div className="p-8"><h1 className="text-3xl font-bold mb-4">Settings Page</h1><p>This is a placeholder for the Settings page.</p></div>;
 
 /**
  * Ana uygulama bileşeni.
@@ -78,6 +80,8 @@ function App() {
           <Route path="calendar" element={<CalendarPage />} />
           <Route path="account" element={<AccountPage />} />
           <Route path="settings" element={<SettingsPage />} />
+          <Route path="folders/:folderId" element={<FolderNotesPage />}  />
+          <Route path="notes/new" element={<NewNotePage />} />
           <Route path="*" element={
             <div className="flex-center h-[80vh] flex-col gap-4">
               <h1 className="text-2xl font-bold">404</h1>

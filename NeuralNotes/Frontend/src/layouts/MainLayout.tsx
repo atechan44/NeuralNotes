@@ -1,40 +1,105 @@
-import { Outlet } from 'react-router-dom';
-import Sidebar from '../components/Sidebar/Sidebar';
-import ThemeToggle from '../components/ThemeToggle';
+import React, { useState, useEffect } from 'react';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowLeft } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import React, { useEffect } from 'react';
+import Sidebar from '../components/Sidebar';
+import CustomMenuIcon from '../components/icons/CustomMenuIcon';
+import PencilIcon from '../components/icons/PencilIcon';
 
 /**
  * MainLayout component
  * Contains the sidebar and main content area using Outlet for nested routes.
  */
 const MainLayout: React.FC = () => {
-  // const { t } = useTranslation(); // Uncomment if t() is used directly in MainLayout for text
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { t } = useTranslation();
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  // Logic to prevent initial transition flicker (can be kept from HEAD)
+  const showBackButton = location.pathname !== '/';
+
   useEffect(() => {
     document.documentElement.classList.add('no-transitions');
     const timer = setTimeout(() => {
       document.documentElement.classList.remove('no-transitions');
-    }, 100); // A small delay to ensure styles are loaded
+    }, 100);
+
+    if (showBackButton) {
+      setIsSidebarOpen(false);
+    }
     return () => clearTimeout(timer);
-  }, []);
+  }, [showBackButton, location.pathname]);
+
+  const handleCreateNote = () => {
+    // console.log('Create new note clicked!');
+    navigate('/notes/new'); // Navigate to NewNotePage
+  };
 
   return (
-    <div className="flex min-h-screen bg-[rgb(var(--background-rgb))] text-[rgb(var(--foreground-rgb))] transition-colors duration-200">
-      <Sidebar />
-      {/* Adjust ml (margin-left) based on actual Sidebar width if it's fixed, otherwise flex-1 on main might be enough */}
-      <main className="flex-1 ml-[calc(4rem+1px)] md:ml-[calc(5rem+1px)] p-4 overflow-y-auto">
-        {/* Example of adjusting margin based on sidebar width, replace with actual sidebar width or responsive logic */}
-        {/* Using calc for example: 4rem (w-16) or 5rem (w-20) + 1px border */}
-        {/* If Sidebar is part of flex and Main content is flex-1, explicit margin might not be needed or could be simpler like ml-16 or ml-20 if sidebar width is fixed by Tailwind classes */}
-        <Outlet />
-      </main>
+    <div className="flex h-screen bg-neutral-100 dark:bg-neutral-950 text-neutral-800 dark:text-neutral-200 transition-colors duration-200">
+      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
-      {/* ThemeToggle can be placed in a top bar or settings menu within MainLayout or App.tsx 
-          For now, keeping it fixed similar to one of the versions */}
-      <div className="fixed top-4 right-4 z-50">
-        <ThemeToggle />
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Top Bar */}
+        <header className="flex items-center justify-between p-3 md:p-4 bg-white dark:bg-neutral-900 shadow-sm h-16 md:h-auto shrink-0">
+          <div className="flex items-center">
+            {showBackButton ? (
+              <button
+                onClick={() => navigate(-1)}
+                className="p-2 rounded-md text-neutral-600 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors duration-150 mr-2 md:mr-3"
+                aria-label={t('layout.back', 'Go back')}
+                title={t('layout.back', 'Go back')}
+              >
+                <ArrowLeft size={22} />
+              </button>
+            ) : (
+              <button
+                onClick={() => setIsSidebarOpen(true)}
+                className="p-2 rounded-md text-neutral-600 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors duration-150 mr-2 md:mr-3"
+                aria-label={t('sidebar.open', 'Open sidebar')}
+                title={t('sidebar.open', 'Open sidebar')}
+              >
+                <CustomMenuIcon />
+              </button>
+            )}
+            {/* Add New Note Button */}
+            {!showBackButton && (
+              <button
+                onClick={handleCreateNote}
+                className="p-2 rounded-md text-neutral-600 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors duration-150 ml-1 md:ml-2 flex items-center"
+                aria-label={t('notes.create', 'Create new note')}
+                title={t('notes.create', 'Create new note')}
+              >
+                <PencilIcon />
+              </button>
+            )}
+          </div>
+          
+          <div className="flex items-center">
+            {/* Sağ tarafa başka öğeler eklenebilir, örneğin kullanıcı profili, bildirimler vb. */}
+            {/* ThemeToggle buradan kaldırıldı, Ayarlar sayfasına taşındı */}
+          </div>
+        </header>
+
+        {/* Content Area */}
+        <main 
+          className={`flex-1 overflow-x-hidden overflow-y-auto p-4 md:p-6 transition-all duration-300 ease-in-out 
+            ${isSidebarOpen && !showBackButton ? 'md:ml-[280px]' : 'ml-0'}
+          `}
+        >
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={location.pathname}
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ duration: 0.2, ease: 'easeInOut' }}
+            >
+              <Outlet />
+            </motion.div>
+          </AnimatePresence>
+        </main>
       </div>
     </div>
   );

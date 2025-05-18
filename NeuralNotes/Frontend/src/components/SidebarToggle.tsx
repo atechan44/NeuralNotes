@@ -1,28 +1,27 @@
-import { motion } from 'framer-motion';
+import React from 'react';
+import { Menu } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface SidebarToggleProps {
-  onClick: () => void;
+  toggle: () => void;
 }
 
 /**
  * Kenar çubuğu açma/kapama butonu bileşeni
  */
-const SidebarToggle = ({ onClick }: SidebarToggleProps) => {
+const SidebarToggle: React.FC<SidebarToggleProps> = ({ toggle }) => {
+  const { t } = useTranslation();
+  const label = t('sidebar.open', 'Open sidebar');
+
   return (
-    <motion.button
-      onClick={onClick}
-      className="fixed top-3 left-3 z-20 p-1.5 rounded-full bg-gray-800 text-white shadow-lg"
-      whileHover={{ scale: 1.1 }}
-      whileTap={{ scale: 0.9 }}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
-      aria-label="Toggle sidebar"
+    <button
+      onClick={toggle}
+      className="p-2 rounded-md text-[rgb(var(--foreground-rgb))] hover:bg-[rgba(var(--foreground-rgb),0.07)] focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[rgb(var(--primary-rgb))] transition-colors duration-150"
+      aria-label={label}
+      title={label}
     >
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-      </svg>
-    </motion.button>
+      <Menu size={24} className="text-[rgb(var(--foreground-rgb))]" />
+    </button>
   );
 };
 

@@ -1,6 +1,7 @@
-import { motion } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
+import React from 'react';
+import { Sun, Moon } from 'lucide-react';
 import useTheme from '../hooks/useTheme';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Theme toggle button component
@@ -9,57 +10,38 @@ import useTheme from '../hooks/useTheme';
 const ThemeToggle: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
   const { t } = useTranslation();
-  
+  const [isMounted, setIsMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    // Hydration hatalarını önlemek için, bileşen mount olana kadar UI render etme
+    // veya bir placeholder/skeleton göster.
+    // Bu butonun stilini, gerçek butonla aynı boyutta olacak şekilde ayarlamak iyi bir pratiktir.
+    return (
+      <div
+        className="p-2 rounded-md w-[36px] h-[36px]" // Gerçek butonla aynı boyutta placeholder
+        aria-hidden="true"
+      />
+    );
+  }
+
   return (
-    <motion.button
-      whileTap={{ scale: 0.95 }}
+    <button
+      type="button"
       onClick={toggleTheme}
-      className="flex items-center justify-center p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-zinc-700 transition-colors"
-      aria-label={t(`theme.${theme === 'light' ? 'dark' : 'light'}`)}
-      title={t(`theme.${theme === 'light' ? 'dark' : 'light'}`)}
+      className="p-2 rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-700 text-neutral-500 dark:text-neutral-400 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-offset-1 dark:focus:ring-offset-neutral-800 focus:ring-[rgb(var(--primary-rgb))]"
+      aria-label={theme === 'light' ? t('theme.switchToDark', 'Switch to dark theme') : t('theme.switchToLight', 'Switch to light theme')}
+      title={theme === 'light' ? t('theme.switchToDark', 'Switch to dark theme') : t('theme.switchToLight', 'Switch to light theme')}
     >
       {theme === 'light' ? (
-        <motion.svg 
-          xmlns="http://www.w3.org/2000/svg" 
-          viewBox="0 0 24 24" 
-          fill="none" 
-          stroke="currentColor" 
-          strokeWidth="2" 
-          strokeLinecap="round" 
-          strokeLinejoin="round" 
-          className="w-5 h-5"
-          initial={{ rotate: -45 }}
-          animate={{ rotate: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446A9 9 0 1 1 12 2.992z" />
-        </motion.svg>
+        <Sun size={20} aria-hidden="true" />
       ) : (
-        <motion.svg 
-          xmlns="http://www.w3.org/2000/svg" 
-          viewBox="0 0 24 24" 
-          fill="none" 
-          stroke="currentColor" 
-          strokeWidth="2" 
-          strokeLinecap="round" 
-          strokeLinejoin="round" 
-          className="w-5 h-5"
-          initial={{ rotate: 45 }}
-          animate={{ rotate: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <circle cx="12" cy="12" r="4" />
-          <path d="M12 2v2" />
-          <path d="M12 20v2" />
-          <path d="m4.93 4.93 1.41 1.41" />
-          <path d="m17.66 17.66 1.41 1.41" />
-          <path d="M2 12h2" />
-          <path d="M20 12h2" />
-          <path d="m6.34 17.66-1.41 1.41" />
-          <path d="m19.07 4.93-1.41 1.41" />
-        </motion.svg>
+        <Moon size={20} aria-hidden="true" />
       )}
-    </motion.button>
+    </button>
   );
 };
 

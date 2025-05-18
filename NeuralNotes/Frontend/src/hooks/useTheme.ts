@@ -1,6 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 type Theme = 'light' | 'dark';
+
+interface UseThemeOutput {
+  theme: Theme;
+  toggleTheme: () => void;
+  setTheme: (theme: Theme) => void;
+}
 
 /**
  * Tema yönetimi için hook.
@@ -9,55 +15,59 @@ type Theme = 'light' | 'dark';
  * - localStorage üzerinden tema persistance
  * - İlk yüklemede sistem temasını kullanma veya localStorage'den okuma
  */
-export default function useTheme() {
-  // Initialize theme from localStorage or system preference
-  const [theme, setTheme] = useState<Theme>(() => {
-    // If running in browser environment
+const useTheme = (): UseThemeOutput => {
+  const [theme, setThemeState] = useState<Theme>(() => {
     if (typeof window !== 'undefined') {
-      // Check for stored preference
       const storedTheme = localStorage.getItem('theme') as Theme | null;
       if (storedTheme) {
         return storedTheme;
       }
-      
-      // Check system preference
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      return prefersDark ? 'dark' : 'light';
+      // Fallback to system preference if no theme is stored
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     }
-    
-    return 'light'; // Default for SSR
+    return 'light'; // Default for SSR or non-browser environments
   });
 
-  // Update classList and localStorage when theme changes
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    
+  const applyTheme = useCallback((newTheme: Theme) => {
     const root = window.document.documentElement;
-    
-    console.log(`[useTheme] Tema şu anki değere güncellendi: ${theme}`); // Tanı amaçlı log
-    
-    if (theme === 'dark') {
+    if (newTheme === 'dark') {
       root.classList.add('dark');
-      root.classList.remove('light');
-    } else { // theme === 'light'
-      root.classList.add('light');
+    } else {
       root.classList.remove('dark');
     }
-    
-    console.log(`[useTheme] document.documentElement.classList: ${root.classList}`); // Tanı amaçlı log
-    
-    // Save the theme preference to localStorage
-    localStorage.setItem('theme', theme);
-    
-    // Optional: Force style update to ensure theme is applied
-    // document.body.style.backgroundColor = ''; // Reset to use CSS variables (Şimdilik yorum satırı)
-    
-  }, [theme]);
+    localStorage.setItem('theme', newTheme);
+  }, []);
 
-  // Toggle theme function
-  const toggleTheme = () => {
-    setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
+  useEffect(() => {
+    applyTheme(theme);
+  }, [theme, applyTheme]);
+
+  // Listen to system theme changes if no theme is stored in localStorage
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = (e: MediaQueryListEvent) => {
+      if (localStorage.getItem('theme') === null) { // Only change if no user preference is set
+        const newSystemTheme = e.matches ? 'dark' : 'light';
+        setThemeState(newSystemTheme);
+      }
+    };
+
+    if (localStorage.getItem('theme') === null) {
+        mediaQuery.addEventListener('change', handleChange);
+    }
+
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
+
+  const setTheme = (newTheme: Theme) => {
+    setThemeState(newTheme);
   };
 
-  return { theme, toggleTheme };
-}
+  const toggleTheme = () => {
+    setThemeState(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
+  };
+
+  return { theme, toggleTheme, setTheme };
+};
+
+export default useTheme;
