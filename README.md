@@ -1,5 +1,3 @@
-Our project is to add proportions and design as a team effort.
-
 **NeuralNotes**
 *AI-Assisted Note-Taking Platform*
 
@@ -19,7 +17,8 @@ This version showcases the initial steps toward that vision.
 ---
 ![image](https://github.com/user-attachments/assets/535c9458-378c-4ec8-90a2-ade248d42e47)
 
-
+My Contributions
+In this project, I worked on the user interface design and layout in support of my teammate. My goal was to improve the user experience of the project and create a modern, usable interface.
 
 ## 🎯 Scope of this MVP
 
