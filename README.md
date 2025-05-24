@@ -1,3 +1,5 @@
+Our project is to add proportions and design as a team effort.
+
 **NeuralNotes**
 *AI-Assisted Note-Taking Platform*
 
