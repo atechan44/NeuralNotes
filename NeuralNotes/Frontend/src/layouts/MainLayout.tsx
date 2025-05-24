@@ -6,12 +6,18 @@ import { useTranslation } from 'react-i18next';
 import Sidebar from '../components/Sidebar';
 import CustomMenuIcon from '../components/icons/CustomMenuIcon';
 import PencilIcon from '../components/icons/PencilIcon';
+import type { Folder } from '../App'; // Import Folder type using type-only import
+
+interface MainLayoutProps {
+  folders: Folder[];
+  addFolder: (folderName: string) => void;
+}
 
 /**
  * MainLayout component
  * Contains the sidebar and main content area using Outlet for nested routes.
  */
-const MainLayout: React.FC = () => {
+const MainLayout: React.FC<MainLayoutProps> = ({ folders, addFolder }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { t } = useTranslation();
   const location = useLocation();
@@ -38,7 +44,12 @@ const MainLayout: React.FC = () => {
 
   return (
     <div className="flex h-screen bg-neutral-100 dark:bg-neutral-950 text-neutral-800 dark:text-neutral-200 transition-colors duration-200">
-      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+      <Sidebar 
+        isOpen={isSidebarOpen} 
+        onClose={() => setIsSidebarOpen(false)} 
+        folders={folders} 
+        addFolder={addFolder} 
+      />
 
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top Bar */}

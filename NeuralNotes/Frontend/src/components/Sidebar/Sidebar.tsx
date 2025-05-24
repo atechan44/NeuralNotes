@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import {
@@ -7,13 +7,15 @@ import {
   X as IconX,
   LogOut,
   CalendarDays,
-  Folder,
+  Folder as FolderIcon,
   FolderOpen,
   MessageSquare,
   Brush,
+  PlusCircle,
   type LucideIcon,
 } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
+import type { Folder } from '../../App';
 
 // Navigasyon öğesi için arayüz
 interface NavItem {
@@ -27,24 +29,30 @@ interface NavItem {
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
+  folders: Folder[];
+  addFolder: (folderName: string) => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, folders, addFolder }) => {
   const { t } = useTranslation();
+  const [openSections, setOpenSections] = React.useState<Record<string, boolean>>({});
+  const [isAddingFolder, setIsAddingFolder] = useState(false);
+  const [newFolderName, setNewFolderName] = useState('');
 
-  // Orijinal sıra ve çevirilerle geri dönelim
-  const exampleSubFolders: NavItem[] = [
-    { id: 'journal', label: t('sidebar.folders.journal', 'Journal'), icon: Folder, path: '/folders/journal' },
-    { id: 'archive', label: t('sidebar.folders.archive', 'Archive'), icon: Folder, path: '/folders/archive' },
-    { id: 'work', label: t('sidebar.folders.work', 'Work Projects'), icon: Folder, path: '/folders/work' },
-  ];
+  // Convert Folder[] to NavItem[]
+  const folderNavItems: NavItem[] = folders.map(folder => ({
+    id: folder.id,
+    label: folder.name,
+    icon: FolderIcon,
+    path: `/folders/${folder.id}`,
+  }));
 
   const navItems: NavItem[] = [
     {
       id: 'folders',
       label: t('sidebar.folders', 'Folders'),
-      icon: Folder,
-      children: exampleSubFolders,
+      icon: FolderIcon,
+      children: folderNavItems,
     },
     { id: 'calendar', label: t('sidebar.calendar', 'Calendar'), icon: CalendarDays, path: '/calendar', children: [] },
     { id: 'canvas', label: t('sidebar.canvas', 'Canvas'), icon: Brush, path: '/canvas', children: [] },
@@ -56,10 +64,42 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     { id: 'logout', label: t('sidebar.logout', 'Logout'), icon: LogOut, path: '/logout' },
   ];
 
-  const [openSections, setOpenSections] = React.useState<Record<string, boolean>>({});
-
   const toggleSection = (id: string) => {
     setOpenSections(prev => ({ ...prev, [id]: !prev[id] }));
+    if (id !== 'folders' && isAddingFolder) {
+      setIsAddingFolder(false);
+      setNewFolderName('');
+    }
+  };
+
+  const handleAddNewFolderClick = () => {
+    setIsAddingFolder(true);
+    setNewFolderName('');
+  };
+
+  const handleSaveFolder = () => {
+    if (newFolderName.trim()) {
+      addFolder(newFolderName.trim());
+      setNewFolderName('');
+      setIsAddingFolder(false);
+    }
+  };
+
+  const handleCancelAddFolder = () => {
+    setIsAddingFolder(false);
+    setNewFolderName('');
+  };
+
+  const handleNewFolderInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewFolderName(e.target.value);
+  };
+
+  const handleNewFolderInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSaveFolder();
+    } else if (e.key === 'Escape') {
+      handleCancelAddFolder();
+    }
   };
 
   const sidebarVariants = {
@@ -119,7 +159,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
 
             <motion.nav variants={itemVariants} className="flex-1 p-3 space-y-1 overflow-y-auto">
               {navItems.map((item) => {
-                const ItemIcon = item.id === 'folders' ? (openSections[item.id] ? FolderOpen : Folder) : item.icon;
+                const ItemIcon = item.id === 'folders' ? (openSections[item.id] ? FolderOpen : FolderIcon) : item.icon;
 
                 return item.children && item.children.length > 0 ? (
                   <motion.div key={item.id} variants={itemVariants} className="w-full">
@@ -141,7 +181,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                         transition={{ duration: 0.2, ease: "easeInOut" }}
                       >
                         {item.children.map(child => {
-                          console.log('Rendering NavLink child:', child);
                           return (
                             <NavLink
                               key={child.id}
@@ -159,6 +198,44 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                             </NavLink>
                           );
                         })}
+                        {item.id === 'folders' && (
+                          isAddingFolder ? (
+                            <div className="mt-1.5 space-y-1.5 pl-1 pr-1">
+                              <input
+                                type="text"
+                                placeholder={t('sidebar.newFolderNamePlaceholder', 'Folder name...')}
+                                value={newFolderName}
+                                onChange={handleNewFolderInputChange}
+                                onKeyDown={handleNewFolderInputKeyDown}
+                                className="w-full p-2 text-sm border border-neutral-300 dark:border-neutral-600 rounded-md bg-neutral-50 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-200 focus:ring-1 focus:ring-[rgb(var(--primary-rgb))] focus:border-[rgb(var(--primary-rgb))] outline-none"
+                                autoFocus
+                              />
+                              <div className="flex items-center justify-end space-x-1.5">
+                                <button
+                                  onClick={handleCancelAddFolder}
+                                  className="px-2.5 py-1 text-xs font-medium text-neutral-600 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-md transition-colors"
+                                >
+                                  {t('common.cancel', 'Cancel')}
+                                </button>
+                                <button
+                                  onClick={handleSaveFolder}
+                                  disabled={!newFolderName.trim()}
+                                  className="px-2.5 py-1 text-xs font-medium text-white bg-[rgb(var(--primary-rgb))] hover:bg-[rgb(var(--primary-rgb-dark))] rounded-md transition-colors disabled:opacity-50"
+                                >
+                                  {t('common.add', 'Add')}
+                                </button>
+                              </div>
+                            </div>
+                          ) : (
+                            <button 
+                              onClick={handleAddNewFolderClick} 
+                              className="flex items-center p-2 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-500 dark:text-neutral-400 transition-colors duration-150 w-full mt-1"
+                            >
+                              <PlusCircle size={16} className="mr-3 shrink-0" />
+                              <span className="truncate">{t('sidebar.addFolder', 'Add New Folder')}</span>
+                            </button>
+                          )
+                        )}
                       </motion.div>
                     )}
                   </motion.div>

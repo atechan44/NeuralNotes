@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom';
+// import { BrowserRouter } from 'react-router-dom'; // KALDIRILDI
 import App from './App.tsx'
 
 // Stil importları
@@ -11,8 +11,8 @@ import './i18n/i18n.ts'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <BrowserRouter>
+    {/* <BrowserRouter> // KALDIRILDI */}
       <App />
-    </BrowserRouter>
+    {/* </BrowserRouter> // KALDIRILDI */}
   </React.StrictMode>
 )

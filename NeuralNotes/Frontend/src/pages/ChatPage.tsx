@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Paperclip, Image as ImageIcon, Send as SendIcon } from 'lucide-react';
+import RecentNotesDisplay from '../components/RecentNotesDisplay';
 
 const ChatPage: React.FC = () => {
   const { t } = useTranslation();
@@ -50,7 +51,7 @@ const ChatPage: React.FC = () => {
           </div>
           <div className="flex items-center gap-3">
             <div className="text-sm text-neutral-500 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-700 px-3 py-1.5 rounded-md">
-              {t('chat.allWeb', 'All Web')} &#9662;
+              gemini-2.5-pro
             </div>
             <span className="text-xs text-neutral-500 dark:text-neutral-400">0/1000</span>
             <button className="p-2 text-white rounded-lg bg-gradient-to-r from-purple-600 via-pink-500 to-red-500 hover:from-purple-700 hover:via-pink-600 hover:to-red-700 transition-all duration-300 ease-in-out flex items-center justify-center">
@@ -59,6 +60,9 @@ const ChatPage: React.FC = () => {
           </div>
         </div>
       </motion.section>
+
+      <RecentNotesDisplay />
+
     </div>
   );
 };

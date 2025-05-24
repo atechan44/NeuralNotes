@@ -1,6 +1,9 @@
-import { useEffect, Suspense } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import React from 'react';
+import { useEffect, Suspense, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { LayoutModeProvider } from './contexts/LayoutModeContext';
+import useTheme from './hooks/useTheme';
 import './styles/globals.css';
 import Home from './pages/Home';
 import MainLayout from './layouts/MainLayout';
@@ -10,6 +13,12 @@ import NewNotePage from './pages/NewNotePage';
 
 // Import i18n
 import './i18n/i18n';
+
+// Define a type for Folder
+export interface Folder {
+  id: string;
+  name: string;
+}
 
 // Placeholder pages for new routes
 const NotePage = () => <div className="p-8"><h1 className="text-3xl font-bold mb-4">Single Note Page</h1><p>This is a placeholder for viewing/editing a single note.</p></div>;
@@ -26,7 +35,29 @@ const AccountPage = () => <div className="p-8"><h1 className="text-3xl font-bold
  * - i18n desteği
  */
 function App() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const [folders, setFolders] = useState<Folder[]>([
+    { id: '1', name: t('folders.general', 'General') },
+    { id: '2', name: t('folders.work', 'Work') },
+    { id: '3', name: t('folders.personal', 'Personal') },
+  ]);
+
+  const addFolder = (folderName: string) => {
+    const newFolder: Folder = {
+      id: String(Date.now()),
+      name: folderName,
+    };
+    setFolders((prevFolders) => [...prevFolders, newFolder]);
+    console.log(t('folders.folderAdded', 'Folder added:'), newFolder);
+  };
+
+  useTheme(); // Initialize theme
+
+  // Example: Set document language and direction based on i18n
+  React.useEffect(() => {
+    document.documentElement.lang = i18n.language;
+    document.documentElement.dir = i18n.dir(i18n.language);
+  }, [i18n, i18n.language]);
 
   // Set up global listeners for system theme changes
   useEffect(() => {
@@ -69,28 +100,32 @@ function App() {
   }, []);
   
   return (
-    <Suspense fallback={<div className="flex-center h-screen w-screen">{t('common.loading')}</div>}>
-      <Routes>
-        <Route path="/" element={<MainLayout />}>
-          <Route index element={<Home />} />
-          <Route path="note" element={<NotePage />} />
-          <Route path="notes" element={<NotesPage />} />
-          <Route path="todo" element={<TodoPage />} />
-          <Route path="canvas" element={<CanvasPage />} />
-          <Route path="calendar" element={<CalendarPage />} />
-          <Route path="account" element={<AccountPage />} />
-          <Route path="settings" element={<SettingsPage />} />
-          <Route path="folders/:folderId" element={<FolderNotesPage />}  />
-          <Route path="notes/new" element={<NewNotePage />} />
-          <Route path="*" element={
-            <div className="flex-center h-[80vh] flex-col gap-4">
-              <h1 className="text-2xl font-bold">404</h1>
-              <p>{t('common.error')}</p>
-            </div>
-          } />
-        </Route>
-      </Routes>
-    </Suspense>
+    <LayoutModeProvider>
+      <Router>
+        <Suspense fallback={<div className="flex-center h-screen w-screen">{t('common.loading')}</div>}>
+          <Routes>
+            <Route path="/" element={<MainLayout folders={folders} addFolder={addFolder} />}>
+              <Route index element={<Home />} />
+              <Route path="note" element={<NotePage />} />
+              <Route path="notes" element={<NotesPage />} />
+              <Route path="todo" element={<TodoPage />} />
+              <Route path="canvas" element={<CanvasPage />} />
+              <Route path="calendar" element={<CalendarPage />} />
+              <Route path="account" element={<AccountPage />} />
+              <Route path="settings" element={<SettingsPage />} />
+              <Route path="folders/:folderId" element={<FolderNotesPage />}  />
+              <Route path="notes/new" element={<NewNotePage folders={folders} />} />
+              <Route path="*" element={
+                <div className="flex-center h-[80vh] flex-col gap-4">
+                  <h1 className="text-2xl font-bold">404</h1>
+                  <p>{t('common.error')}</p>
+                </div>
+              } />
+            </Route>
+          </Routes>
+        </Suspense>
+      </Router>
+    </LayoutModeProvider>
   );
 }
 
