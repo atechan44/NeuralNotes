@@ -16,6 +16,9 @@ This version showcases the initial steps toward that vision.
 
 ---
 
+![Uploading image.png…]()
+
+
 ## 🎯 Scope of this MVP
 
 This MVP implementation is **purely frontend** and does not yet include backend services or actual AI integrations. It serves as a **proof of concept** and design baseline for future development.
