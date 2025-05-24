@@ -15,8 +15,8 @@ NeuralNotes aims to be more than just a basic notepad. The vision is to integrat
 This version showcases the initial steps toward that vision.
 
 ---
+![image](https://github.com/user-attachments/assets/535c9458-378c-4ec8-90a2-ade248d42e47)
 
-![Uploading image.png…]()
 
 
 ## 🎯 Scope of this MVP
